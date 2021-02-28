@@ -41,6 +41,7 @@ const NotifyScreen = () => {
       <Button
         title="   Notify Me   "
         type="solid"
+        raised
         icon={<FontAwesome name="send" size={16} color="white" />}
         onPress={async () => {
           await schedulePushNotification();
@@ -52,23 +53,26 @@ const NotifyScreen = () => {
 
 export default NotifyScreen;
 
-async function schedulePushNotification() {
+const schedulePushNotification = async () => {
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: "You've got mail! 📬",
+      title: "Notification Test",
       body: 'Here is the notification body',
       data: { data: 'goes here' },
     },
     trigger: { seconds: 2 },
   });
-}
+};
 
-async function registerForPushNotificationsAsync() {
+const registerForPushNotificationsAsync = async () => {
   let token;
+  // if it's a physical device
   if (Constants.isDevice) {
+    // rename status to existingStatus
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
     if (existingStatus !== 'granted') {
+      // if no permission, ask for permission
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
