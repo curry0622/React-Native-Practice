@@ -1,18 +1,18 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import SettingScreen from '../screens/settingScreen';
+import NotifyScreen from '../screens/notifyScreen';
 
 const Stack = createStackNavigator();
 
-const SettingStack = () => {
+const NotifyStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Setting" component={SettingScreen} />
+      <Stack.Screen name="Notify" component={NotifyScreen} />
     </Stack.Navigator>
   )
 };
 
-export default SettingStack;
+export default NotifyStack;
 
 const styles = StyleSheet.create({});
