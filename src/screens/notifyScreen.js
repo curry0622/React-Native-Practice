@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import { StatusBar } from 'expo-status-bar';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, SafeAreaView, Platform, View } from 'react-native';
@@ -38,6 +39,7 @@ const NotifyScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="auto" />
       <Button
         title="   Notify Me   "
         type="solid"
