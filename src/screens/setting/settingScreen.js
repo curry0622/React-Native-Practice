@@ -3,11 +3,11 @@ import { StyleSheet, Text, SafeAreaView, View  } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 
-const SettingScreen = () => {
+const SettingScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container} >
       <View style={styles.listContainer}>
-        <ListItem bottomDivider>
+        <ListItem bottomDivider onPress={() => navigation.push('Profile')}>
           <Ionicons name="person-circle-sharp" size={24} color="#4d419e" />
           <ListItem.Content>
             <ListItem.Title>My Profile</ListItem.Title>
@@ -17,7 +17,7 @@ const SettingScreen = () => {
         <ListItem bottomDivider>
           <ListItem.Chevron />
         </ListItem>
-        <ListItem bottomDivider>
+        <ListItem>
           <ListItem.Chevron />
         </ListItem>
       </View>
