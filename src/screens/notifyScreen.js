@@ -41,7 +41,7 @@ const NotifyScreen = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <Button
-        title="   Notify Me   "
+        title="   台積電今日股價   "
         type="solid"
         raised
         icon={<FontAwesome name="send" size={16} color="white" />}
@@ -58,8 +58,8 @@ export default NotifyScreen;
 const schedulePushNotification = async () => {
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: "Notification Test",
-      body: 'Here is the notification body',
+      title: '台積電(TSMC)',
+      body: '2022/03/10 開581 高582 低574 收575 量38709 漲跌-12',
       data: { data: 'goes here' },
     },
     trigger: { seconds: 2 },
