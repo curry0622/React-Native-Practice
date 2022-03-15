@@ -23,7 +23,7 @@ const ScanScreen = () => {const [hasPermission, setHasPermission] = useState(nul
 
   const handleOpenBrowser = async () => {
     WebBrowser.dismissBrowser()
-    const result = await WebBrowser.openBrowserAsync(url);
+    await WebBrowser.openBrowserAsync(url);
     setUrl(null);
   };
 
@@ -41,8 +41,8 @@ const ScanScreen = () => {const [hasPermission, setHasPermission] = useState(nul
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={styles.scanner}
       />
-      <Button title="Tap to Scan Again" disabled={!scanned} onPress={() => setScanned(false)} />
-      <Button title="Open in browser" disabled={!url} onPress={handleOpenBrowser} />
+      <Button raised title="Tap to Scan Again" disabled={!scanned} onPress={() => setScanned(false)} />
+      <Button raised title="Open in browser" disabled={!url} onPress={handleOpenBrowser} />
     </SafeAreaView>
   )
 };
