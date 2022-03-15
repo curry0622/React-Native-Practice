@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 const LoginScreen = ({ navigation }) => {
+  const [showPsw, setShowPsw] = useState(false);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputContainer}>
@@ -13,8 +16,12 @@ const LoginScreen = ({ navigation }) => {
         />
         <Input
           label="Password"
-          secureTextEntry
+          secureTextEntry={!showPsw}
           inputContainerStyle={styles.input}
+          rightIcon={
+            !showPsw
+            ? <Ionicons name="ios-eye" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />
+            : <Ionicons name="ios-eye-off" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />}
         />
       </View>
       <Button
@@ -35,15 +42,17 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
   },
   inputContainer: {
     width: '100%',
     padding: 20,
+    marginTop: 40
   },
   input: {
+    height: 48,
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 5,
@@ -51,14 +60,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10
   },
   buttonContainer: {
-    width: '84.5%',
+    width: '85%',
+    // height: 50,
     // margin: 20,
     // padding: 20,
   },
   button: {
     // width: '100%',
     padding: 12,
-    backgroundColor: '#00bbf0',
+    backgroundColor: '#0085ff',
     borderRadius: 5,
   }
 });
