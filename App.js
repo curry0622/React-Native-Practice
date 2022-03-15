@@ -14,11 +14,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeStack} options={{ tabBarIcon: ({ focused }) => <Entypo name="home" size={20} color={focused ? '#4d419e' : '#707070'} /> }} />
-        <Tab.Screen name="List" component={ListStack} options={{ tabBarIcon: ({ focused }) => <Foundation name="list" size={20} color={focused ? '#4d419e' : '#707070'} /> }} />
-        <Tab.Screen name="Scan" component={ScanStack} options={{ tabBarIcon: ({ focused }) => <Ionicons name="scan-circle" size={30} color={focused ? '#4d419e' : '#707070'} /> }} />
-        <Tab.Screen name="Notify" component={NotifyStack} options={{ tabBarIcon: ({ focused }) => <Ionicons name="notifications" size={20} color={focused ? '#4d419e' : '#707070'} /> }} />
-        <Tab.Screen name="Setting" component={SettingStack} options={{ tabBarIcon: ({ focused }) => <Ionicons name="settings-sharp" size={20} color={focused ? '#4d419e' : '#707070'} /> }} />
+        <Tab.Screen name="Home" component={HomeStack} options={{ tabBarIcon: ({ focused }) => <Entypo name="home" size={20} color={focused ? '#005792' : '#707070'} /> }} />
+        <Tab.Screen name="List" component={ListStack} options={{ tabBarIcon: ({ focused }) => <Foundation name="list" size={20} color={focused ? '#005792' : '#707070'} /> }} />
+        <Tab.Screen name="Scan" component={ScanStack} options={{ tabBarIcon: ({ focused }) => <Ionicons name="scan-circle" size={30} color={focused ? '#005792' : '#707070'} /> }} />
+        <Tab.Screen name="Notify" component={NotifyStack} options={{ tabBarIcon: ({ focused }) => <Ionicons name="notifications" size={20} color={focused ? '#005792' : '#707070'} /> }} />
+        <Tab.Screen name="Setting" component={SettingStack} options={{ tabBarIcon: ({ focused }) => <Ionicons name="settings-sharp" size={20} color={focused ? '#005792' : '#707070'} /> }} />
       </Tab.Navigator>
     </NavigationContainer>
   );

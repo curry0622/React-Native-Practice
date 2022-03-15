@@ -8,7 +8,7 @@ const SettingScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container} >
       <View style={styles.listContainer}>
         <ListItem bottomDivider onPress={() => navigation.push('Profile')}>
-          <Ionicons name="person-circle-sharp" size={24} color="#4d419e" />
+          <Ionicons name="person-circle-sharp" size={24} color="#00bbf0" />
           <ListItem.Content>
             <ListItem.Title>My Profile</ListItem.Title>
           </ListItem.Content>

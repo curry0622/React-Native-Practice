@@ -1,10 +1,18 @@
 import React from 'react';
 import { StyleSheet, Text, SafeAreaView } from 'react-native';
+import { Button } from 'react-native-elements';
+import { AntDesign } from '@expo/vector-icons';
 
 const ProfileScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text>ProfileScreen</Text>
+      <Button
+        title="  Login    "
+        type="solid"
+        raised
+        icon={<AntDesign name="login" size={24} color="white" />}
+        onPress={() => {}}
+      />
     </SafeAreaView>
   )
 };
