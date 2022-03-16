@@ -16,13 +16,13 @@ const LoginScreen = ({ navigation }) => {
         />
         <Input
           label="Password"
-          keyboardType='number-and-punctuation'
+          keyboardType='default'
           secureTextEntry={!showPsw}
           inputContainerStyle={styles.input}
-          rightIcon={
-            !showPsw
-            ? <Ionicons name="ios-eye" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />
-            : <Ionicons name="ios-eye-off" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />}
+          // rightIcon={
+          //   !showPsw
+          //   ? <Ionicons name="ios-eye" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />
+          //   : <Ionicons name="ios-eye-off" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />}
         />
       </View>
       <Button
@@ -36,7 +36,7 @@ const LoginScreen = ({ navigation }) => {
       <Button
         title="Forgot Password ?"
         type="solid"
-        titleStyle={{ color: '#0085ff' }}
+        titleStyle={{ color: '#00bbf0' }}
         buttonStyle={{...styles.btn, ...styles.whiteBtn}}
         containerStyle={styles.btnContainer}
         onPress={() => navigation.popToTop()}
@@ -46,7 +46,7 @@ const LoginScreen = ({ navigation }) => {
       <Button
         title="Sign up"
         type="solid"
-        titleStyle={{ color: '#0085ff' }}
+        titleStyle={{ color: '#00bbf0' }}
         buttonStyle={{...styles.btn, ...styles.whiteBtn}}
         containerStyle={styles.btnContainer}
         onPress={() => navigation.popToTop()}
@@ -82,12 +82,12 @@ const styles = StyleSheet.create({
   },
   btn: {
     padding: 12,
-    backgroundColor: '#0085ff',
+    backgroundColor: '#00bbf0',
     borderRadius: 5,
   },
   whiteBtn: {
     backgroundColor: 'transparent',
-    color: '#0085ff',
+    color: '#00bbf0',
   },
   hintTxt: {
     fontSize: 16,
