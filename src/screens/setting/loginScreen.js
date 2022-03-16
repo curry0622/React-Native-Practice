@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { Button, Input, Divider } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -12,10 +12,12 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.inputContainer}>
         <Input
           label="Email"
+          keyboardType='email-address'
           inputContainerStyle={styles.input}
         />
         <Input
           label="Password"
+          keyboardType='default'
           secureTextEntry={!showPsw}
           inputContainerStyle={styles.input}
           rightIcon={
@@ -25,12 +27,50 @@ const LoginScreen = ({ navigation }) => {
         />
       </View>
       <Button
-        title="  Login    "
+        title="Log in"
         type="solid"
         raised
         buttonStyle={styles.button}
         containerStyle={styles.buttonContainer}
-        icon={<AntDesign name="login" size={24} color="white" />}
+        // icon={<AntDesign name="login" size={24} color="white" />}
+        onPress={() => navigation.popToTop()}
+      />
+      <Button
+        title="Forgot Password ?"
+        type="solid"
+        // raised
+        titleStyle={{ color: '#0085ff' }}
+        buttonStyle={{...styles.button, ...styles.forgotBtn}}
+        containerStyle={styles.buttonContainer}
+        // icon={<AntDesign name="login" size={24} color="white" />}
+        onPress={() => navigation.popToTop()}
+      />
+      <View
+        style={{
+          width: '85%',
+          borderBottomColor: '#ddd',
+          borderBottomWidth: 1,
+          marginBottom: 30,
+        }}
+      />
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: 'bold',
+          color: '#969696',
+          marginBottom: 10,
+        }}
+      >
+        Don't have an account ?
+      </Text>
+      <Button
+        title="Sign up"
+        type="solid"
+        // raised
+        titleStyle={{ color: '#0085ff' }}
+        buttonStyle={{...styles.button, ...styles.forgotBtn}}
+        containerStyle={styles.buttonContainer}
+        // icon={<AntDesign name="login" size={24} color="white" />}
         onPress={() => navigation.popToTop()}
       />
     </SafeAreaView>
@@ -49,7 +89,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
     padding: 20,
-    marginTop: 40
+    marginTop: 20
   },
   input: {
     height: 48,
@@ -61,6 +101,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '85%',
+    marginBottom: 20,
     // height: 50,
     // margin: 20,
     // padding: 20,
@@ -70,5 +111,9 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: '#0085ff',
     borderRadius: 5,
+  },
+  forgotBtn: {
+    backgroundColor: 'transparent',
+    color: '#0085ff',
   }
 });
