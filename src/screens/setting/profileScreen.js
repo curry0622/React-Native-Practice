@@ -3,7 +3,7 @@ import { StyleSheet, Text, SafeAreaView } from 'react-native';
 import { Button } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Button
@@ -11,7 +11,7 @@ const ProfileScreen = () => {
         type="solid"
         raised
         icon={<AntDesign name="login" size={24} color="white" />}
-        onPress={() => {}}
+        onPress={() => navigation.push('Login')}
       />
     </SafeAreaView>
   )
