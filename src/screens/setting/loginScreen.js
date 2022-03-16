@@ -16,7 +16,7 @@ const LoginScreen = ({ navigation }) => {
         />
         <Input
           label="Password"
-          keyboardType='default'
+          keyboardType='number-and-punctuation'
           secureTextEntry={!showPsw}
           inputContainerStyle={styles.input}
           rightIcon={
