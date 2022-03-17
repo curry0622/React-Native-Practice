@@ -1,0 +1,83 @@
+[
+  {
+    "name": "台積電",
+    "price": 579.00,
+    "open": 578.00,
+    "high": 582.00,
+    "low": 575.00,
+    "percentage": "-1.56%",
+    "up": false
+  },
+  {
+    "name": "聯發科",
+    "price": 971.00,
+    "open": 951.00,
+    "high": 978.00,
+    "low": 949.00,
+    "percentage": "+5.69%",
+    "up": true
+  },
+  {
+    "name": "聯電",
+    "price": 52.60,
+    "open": 52.40,
+    "high": 52.80,
+    "low": 52.20,
+    "percentage": "+3.54%",
+    "up": true
+  },
+  {
+    "name": "鴻海",
+    "price": 104.00,
+    "open": 103.50,
+    "high": 104.50,
+    "low": 103.00,
+    "percentage": "+2.46%",
+    "up": true
+  },
+  {
+    "name": "中鋼",
+    "price": 38.85,
+    "open": 38.90,
+    "high": 38.90,
+    "low": 38.55,
+    "percentage": "-1.56%",
+    "up": false
+  },
+  {
+    "name": "台積電",
+    "price": 579.00,
+    "open": 578.00,
+    "high": 582.00,
+    "low": 575.00,
+    "percentage": "-1.56%",
+    "up": false
+  },
+  {
+    "name": "台積電",
+    "price": 579.00,
+    "open": 578.00,
+    "high": 582.00,
+    "low": 575.00,
+    "percentage": "-1.56%",
+    "up": false
+  },
+  {
+    "name": "台積電",
+    "price": 579.00,
+    "open": 578.00,
+    "high": 582.00,
+    "low": 575.00,
+    "percentage": "-1.56%",
+    "up": false
+  },
+  {
+    "name": "台積電",
+    "price": 579.00,
+    "open": 578.00,
+    "high": 582.00,
+    "low": 575.00,
+    "percentage": "-1.56%",
+    "up": false
+  }
+]

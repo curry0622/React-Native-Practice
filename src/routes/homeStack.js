@@ -8,8 +8,15 @@ const Stack = createStackNavigator();
 const HomeStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Stock" component={StockScreen} />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+      />
+      <Stack.Screen
+        name="Stock"
+        component={StockScreen}
+        options={({ route }) => ({ title: route.params.title })}
+      />
     </Stack.Navigator>
   )
 };
