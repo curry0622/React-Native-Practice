@@ -3,7 +3,6 @@ import { StyleSheet, Text, SafeAreaView, View, ScrollView  } from 'react-native'
 import { ListItem } from 'react-native-elements';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 
-
 const SettingScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} >
