@@ -22,7 +22,7 @@ const HomeScreen = () => {
         >
           <ListItem.Content>
             <ListItem.Title style={styles.title}>聯發科  971.00</ListItem.Title>
-            <ListItem.Subtitle style={styles.subtitle}>開578.00  高582.00  低575.0</ListItem.Subtitle>
+            <ListItem.Subtitle style={styles.subtitle}>開951.00  高978.00  低949.0</ListItem.Subtitle>
           </ListItem.Content>
           <Badge value="+5.69%" status="error" />
           <ListItem.Chevron />
