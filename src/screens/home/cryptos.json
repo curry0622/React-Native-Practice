@@ -1,0 +1,16 @@
+[
+  {
+    "name": "bitcoin",
+    "symbol": "BTC",
+    "price": 40767.51,
+    "percentage": "+0.84%",
+    "up": true
+  },
+  {
+    "name": "ethereum",
+    "symbol": "ETH",
+    "price": 2776.83,
+    "percentage": "-4.11%",
+    "up": false
+  }
+]
