@@ -1,27 +1,45 @@
 import React from 'react';
-import { StyleSheet, Text, SafeAreaView, View  } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, View, ScrollView  } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 
 const SettingScreen = ({ navigation }) => {
   return (
-    <SafeAreaView style={styles.container} >
-      <View style={styles.listContainer}>
-        <ListItem bottomDivider onPress={() => navigation.push('Profile')}>
-          <Ionicons name="person-circle-sharp" size={24} color="#00bbf0" />
+    <ScrollView style={styles.container} >
+      <View style={styles.listItemsContainer}>
+        <ListItem
+          containerStyle={styles.listItem}
+          bottomDivider
+          onPress={() => navigation.push('Profile')}
+        >
+          <Ionicons name="person-circle-sharp" size={36} color="#00bbf0" />
           <ListItem.Content>
-            <ListItem.Title>My Profile</ListItem.Title>
+            <ListItem.Title>Profile</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <ListItem bottomDivider>
+        <ListItem
+          containerStyle={styles.listItem}
+          bottomDivider
+        >
+          <Ionicons name="stats-chart" size={36} color="#00bbf0" />
+          <ListItem.Content>
+            <ListItem.Title>Favorite Stocks</ListItem.Title>
+          </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <ListItem>
+        <ListItem
+          containerStyle={styles.listItem}
+          bottomDivider
+        >
+          <Ionicons name="logo-bitcoin" size={36} color="#00bbf0" />
+          <ListItem.Content>
+            <ListItem.Title>Favorite Crypto</ListItem.Title>
+          </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
       </View>
-    </SafeAreaView >
+    </ScrollView >
   )
 };
 
@@ -30,10 +48,13 @@ export default SettingScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 10
+    backgroundColor: '#fff',
   },
-  listContainer: {
-    width: 'auto'
+  listItemsContainer: {
+    width: '100%',
+  },
+  listItem: {
+    height: 72,
+    paddingHorizontal: 20,
   }
 });
