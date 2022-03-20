@@ -19,10 +19,10 @@ const LoginScreen = ({ navigation }) => {
           keyboardType='default'
           secureTextEntry={!showPsw}
           inputContainerStyle={styles.input}
-          // rightIcon={
-          //   !showPsw
-          //   ? <Ionicons name="ios-eye" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />
-          //   : <Ionicons name="ios-eye-off" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />}
+        // rightIcon={
+        //   !showPsw
+        //   ? <Ionicons name="ios-eye" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />
+        //   : <Ionicons name="ios-eye-off" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />}
         />
       </View>
       <Button
@@ -37,19 +37,19 @@ const LoginScreen = ({ navigation }) => {
         title="Forgot Password ?"
         type="solid"
         titleStyle={{ color: '#00bbf0' }}
-        buttonStyle={{...styles.btn, ...styles.whiteBtn}}
+        buttonStyle={{ ...styles.btn, ...styles.whiteBtn }}
         containerStyle={styles.btnContainer}
         onPress={() => navigation.popToTop()}
       />
-      <View style={styles.divider}/>
+      <View style={styles.divider} />
       <Text style={styles.hintTxt}>Don't have an account ?</Text>
       <Button
         title="Sign up"
         type="solid"
-        titleStyle={{ color: '#00bbf0' }}
-        buttonStyle={{...styles.btn, ...styles.whiteBtn}}
+        raised
+        buttonStyle={styles.btn}
         containerStyle={styles.btnContainer}
-        onPress={() => navigation.popToTop()}
+        onPress={() => navigation.push('Signup')}
       />
     </SafeAreaView>
   )
