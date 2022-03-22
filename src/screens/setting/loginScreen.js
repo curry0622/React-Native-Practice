@@ -19,10 +19,10 @@ const LoginScreen = ({ navigation }) => {
           keyboardType='default'
           secureTextEntry={!showPsw}
           inputContainerStyle={styles.input}
-        // rightIcon={
-        //   !showPsw
-        //   ? <Ionicons name="ios-eye" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />
-        //   : <Ionicons name="ios-eye-off" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />}
+          // rightIcon={
+          //   !showPsw
+          //   ? <Ionicons name="ios-eye" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />
+          //   : <Ionicons name="ios-eye-off" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />}
         />
       </View>
       <Button
@@ -46,8 +46,8 @@ const LoginScreen = ({ navigation }) => {
       <Button
         title="Sign up"
         type="solid"
-        raised
-        buttonStyle={styles.btn}
+        titleStyle={{ color: '#00bbf0' }}
+        buttonStyle={{ ...styles.btn, ...styles.whiteBtn }}
         containerStyle={styles.btnContainer}
         onPress={() => navigation.push('Signup')}
       />
