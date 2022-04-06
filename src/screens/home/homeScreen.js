@@ -8,22 +8,27 @@ import cryptos from './cryptos.json';
 const HomeScreen = ({ navigation }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const onPressStock = (stockName) => {
-    navigation.navigate('Stock', { title: stockName });
+  const onPressStock = (stock) => {
+    navigation.navigate('Stock', { ...stock });
+  };
+
+  const getPercentageText = (priceIncrease, startPrice) => {
+    const percentage = (priceIncrease / startPrice) * 100;
+    return `${percentage > 0 ? '+' : ''}${percentage.toFixed(2)}%`;
   };
 
   const createStockBars = stocks.map((stock) => (
     <View style={styles.listItem}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
-        onPress={() => onPressStock(stock.name)}
+        onPress={() => onPressStock(stock)}
         underlayColor="#ddd"
       >
         <ListItem.Content>
-          <ListItem.Title style={styles.title}>{`${stock.name}  $${stock.price}`}</ListItem.Title>
-          <ListItem.Subtitle style={styles.subtitle}>{`開${stock.open}  高${stock.high}  低${stock.low}`}</ListItem.Subtitle>
+          <ListItem.Title style={styles.title}>{`[${stock.number}]  ${stock.name}  $${stock.now_price.toFixed(2)}`}</ListItem.Title>
+          <ListItem.Subtitle style={styles.subtitle}>{`開${stock.start_price}  高${stock.high_price}  低${stock.low_price}`}</ListItem.Subtitle>
         </ListItem.Content>
-        <Badge value={stock.percentage} status={stock.up ? 'error' : 'success'} />
+        <Badge value={getPercentageText(stock.price_increase, stock.now_price)} status={stock.price_increase > 0 ? 'error' : 'success'} />
         <ListItem.Chevron />
       </ListItem>
     </View>
@@ -33,7 +38,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={{ ...styles.listItem, height: 'auto' }}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
-        onPress={() => onPressStock(crypto.symbol)}
+        // onPress={() => onPressStock(crypto.symbol)}
         underlayColor="#ddd"
       >
         <View style={{ width: 36, height: 36, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -42,7 +47,7 @@ const HomeScreen = ({ navigation }) => {
         <ListItem.Content>
           <ListItem.Title style={{ fontSize: 18 }}>{`${crypto.symbol}  $${crypto.price}`}</ListItem.Title>
         </ListItem.Content>
-        <Badge value={crypto.percentage} status={crypto.up ? 'success' : 'error'} />
+        <Badge value={crypto.percentage} status={crypto.up ? 'error' : 'success'} />
         <ListItem.Chevron />
       </ListItem>
     </View>
