@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView, View } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator } from 'react-native';
 import { Badge, Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -59,10 +59,21 @@ const StockScreen = ({ route }) => {
           <Text>開 $123</Text><Text>低 $112</Text><Text>高 $125</Text>
         </View> */}
       </View>
+      <View style={styles.infoContainer}>
+        <Text style={{ fontSize: 16 }}>開  {route.params.start_price}</Text>
+        <Text style={{ fontSize: 16 }}>高  {route.params.high_price}</Text>
+        <Text style={{ fontSize: 16 }}>低  {route.params.low_price}</Text>
+      </View>
       <View style={styles.chartContainer}>
-        <View style={styles.chart}>
-          {/* <Text>Chart</Text> */}
-        </View>
+        <ScrollView style={styles.chartScroll} horizontal>
+          <Image
+            source={{ uri: 'https://i.imgur.com/3tEY53m.jpg' }}
+            style={styles.chart}
+            resizeMode="contain"
+            // placeholder={<ActivityIndicator size="large" color="#00bbf0" />}
+          />
+          {/* <ActivityIndicator size="large" color="#00bbf0" /> */}
+        </ScrollView>
       </View>
       <View style={styles.selector}>
         {/* <Text>Selector</Text> */}
@@ -115,6 +126,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
+    paddingHorizontal: 22,
+    marginBottom: 10,
     // borderWidth: 1,
     // borderColor: '#ddd',
   },
@@ -124,17 +137,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 300,
+    height: 400,
     // borderWidth: 1,
     // borderColor: '#ddd',
     paddingHorizontal: 20,
   },
-  chart: {
+  chartScroll: {
+    // display: 'flex',
+    // justifyContent: 'center',
+    // alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ddd',
     width: '100%',
     height: '100%',
     borderRadius: 5,
+  },
+  chart: {
+    width: 540,
+    height: '100%',
   },
   selector: {
     display: 'flex',

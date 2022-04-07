@@ -15,7 +15,9 @@ const HomeStack = () => {
       <Stack.Screen
         name="Stock"
         component={StockScreen}
-        options={({ route }) => ({ title: route.params.name })}
+        options={({ route }) => ({
+          title: `[${route.params.number}] ${route.params.name}`,
+        })}
       />
     </Stack.Navigator>
   )
