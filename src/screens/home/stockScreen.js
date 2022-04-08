@@ -15,6 +15,7 @@ const getIncreaseText = (priceIncrease) => {
 const StockScreen = ({ route }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scale, setScale] = useState(true)
+  const [fav, setFav] = useState(false)
 
   return (
     <ScrollView style={styles.container}>
@@ -43,16 +44,8 @@ const StockScreen = ({ route }) => {
         </View>
         <Button
           type="solid"
-          // raised
-          // icon={
-          //   <Ionicons
-          //     name="heart"
-          //     size={20}
-          //     color="#f50"
-          //   />
-          // }
           icon={{
-            name: 'bookmark',
+            name: `${fav ? 'bookmark' : 'bookmark-o'}`,
             type: 'font-awesome',
             size: 20,
             color: '#f50',
@@ -63,26 +56,34 @@ const StockScreen = ({ route }) => {
             borderColor: '#ddd',
             borderRadius: 5,
           }}
+          onPress={() => setFav(!fav)}
         />
-        {/* <View style={styles.infoContainer}>
-          <Text>開 $123</Text><Text>低 $112</Text><Text>高 $125</Text>
-        </View> */}
       </View>
       <View style={styles.infoContainer}>
-        <Text style={{ fontSize: 16 }}>開  {route.params.start_price}</Text>
-        <Text style={{ fontSize: 16 }}>高  {route.params.high_price}</Text>
-        <Text style={{ fontSize: 16 }}>低  {route.params.low_price}</Text>
+        <Text style={{ fontSize: 16 }}>開  ${(route.params.start_price).toFixed(2)}</Text>
+        <Text style={{ fontSize: 16 }}>高  ${(route.params.high_price).toFixed(2)}</Text>
+        <Text style={{ fontSize: 16 }}>低  ${(route.params.low_price).toFixed(2)}</Text>
       </View>
       <View style={styles.chartContainer}>
-        <ScrollView style={styles.chartScroll} horizontal>
-          <Image
-            source={{ uri: 'https://i.imgur.com/3tEY53m.jpg' }}
-            style={styles.chart}
-            resizeMode="contain"
-            // placeholder={<ActivityIndicator size="large" color="#00bbf0" />}
-          />
-          {/* <ActivityIndicator size="large" color="#00bbf0" /> */}
-        </ScrollView>
+        {scale ? (
+          <ScrollView style={styles.chartScroll} horizontal>
+            <Image
+              source={{ uri: 'https://i.imgur.com/3tEY53m.jpg' }}
+              style={styles.chart}
+              resizeMode="contain"
+              placeholder={<ActivityIndicator size="large" color="#00bbf0" />}
+            />
+          </ScrollView>
+        ) : (
+          <View style={styles.chartScroll}>
+            <Image
+              source={{ uri: 'https://i.imgur.com/3tEY53m.jpg' }}
+              style={styles.chartMinified}
+              resizeMode="contain"
+              placeholder={<ActivityIndicator size="large" color="#00bbf0" />}
+            />
+          </View>
+        )}
         <Button
           icon={{
             name: `${scale ? 'search-minus' : 'search-plus'}`,
@@ -97,7 +98,7 @@ const StockScreen = ({ route }) => {
       </View>
       <View style={styles.selector}>
         <ButtonGroup
-          buttons={['MACD', 'KD', 'MA', 'BOOL']}
+          buttons={['MACD', 'KD', 'MA', '布林通道']}
           selectedIndex={selectedIndex}
           onPress={(value) => setSelectedIndex(value)}
           containerStyle={styles.btnGrpContainer}
@@ -177,10 +178,14 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     width: '100%',
     height: '100%',
-    borderRadius: 5,
+    // borderRadius: 5,
   },
   chart: {
     width: 540,
+    height: '100%',
+  },
+  chartMinified: {
+    width: '100%',
     height: '100%',
   },
   selector: {
