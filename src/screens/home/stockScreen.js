@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator } from 'react-native';
-import { Badge, Button } from 'react-native-elements';
+import { Badge, Button, ButtonGroup } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 
 const getPercentageText = (priceIncrease, startPrice) => {
@@ -13,6 +13,9 @@ const getIncreaseText = (priceIncrease) => {
 };
 
 const StockScreen = ({ route }) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scale, setScale] = useState(true)
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -41,13 +44,19 @@ const StockScreen = ({ route }) => {
         <Button
           type="solid"
           // raised
-          icon={
-            <Ionicons
-              name="heart"
-              size={20}
-              color="#f50"
-            />
-          }
+          // icon={
+          //   <Ionicons
+          //     name="heart"
+          //     size={20}
+          //     color="#f50"
+          //   />
+          // }
+          icon={{
+            name: 'bookmark',
+            type: 'font-awesome',
+            size: 20,
+            color: '#f50',
+          }}
           buttonStyle={{
             backgroundColor: '#fff',
             borderWidth: 1,
@@ -74,9 +83,26 @@ const StockScreen = ({ route }) => {
           />
           {/* <ActivityIndicator size="large" color="#00bbf0" /> */}
         </ScrollView>
+        <Button
+          icon={{
+            name: `${scale ? 'search-minus' : 'search-plus'}`,
+            type: 'font-awesome',
+            size: 20,
+            color: 'white',
+          }}
+          containerStyle={styles.scaleBtnContainer}
+          buttonStyle={styles.scaleBtn}
+          onPress={() => setScale(!scale)}
+        />
       </View>
       <View style={styles.selector}>
-        {/* <Text>Selector</Text> */}
+        <ButtonGroup
+          buttons={['MACD', 'KD', 'MA', 'BOOL']}
+          selectedIndex={selectedIndex}
+          onPress={(value) => setSelectedIndex(value)}
+          containerStyle={styles.btnGrpContainer}
+          selectedButtonStyle={styles.selectedBtn}
+        />
       </View>
     </ScrollView>
   )
@@ -138,6 +164,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: 400,
+    position: 'relative',
     // borderWidth: 1,
     // borderColor: '#ddd',
     paddingHorizontal: 20,
@@ -166,4 +193,21 @@ const styles = StyleSheet.create({
     // borderColor: '#ddd',
     paddingHorizontal: 20,
   },
+  btnGrpContainer: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    width: '100%',
+  },
+  selectedBtn: {
+    backgroundColor: '#00bbf0',
+  },
+  scaleBtnContainer: {
+    position: 'absolute',
+    top: 10,
+    left: 30,
+  },
+  scaleBtn: {
+    backgroundColor: '#707070',
+    opacity: 0.3
+  }
 });
