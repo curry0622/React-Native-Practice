@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, ScrollView  } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { StyleSheet, View, ScrollView, RefreshControl  } from 'react-native';
 import { ListItem, Badge, ButtonGroup } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
 import stocks from './stocks.json';
@@ -7,6 +7,12 @@ import cryptos from './cryptos.json';
 
 const HomeScreen = ({ navigation }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 1200)
+  }, []);
 
   const onPressStock = (stock) => {
     navigation.navigate('Stock', { ...stock });
@@ -56,6 +62,12 @@ const HomeScreen = ({ navigation }) => {
   return (
     <ScrollView
       style={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
     >
       <View style={styles.listItemsContainer}>
         <ButtonGroup
@@ -98,6 +110,8 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   btnGrpContainer: {
+    width: '100%',
+    marginLeft: 0,
     marginBottom: 25,
     borderRadius: 5,
   },

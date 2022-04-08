@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import { Badge, Button, ButtonGroup } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import getStockKD from '../../apis/getStockKD';
@@ -13,12 +13,20 @@ const getIncreaseText = (priceIncrease) => {
   return `${priceIncrease > 0 ? '↑' : '↓'} ${Math.abs(priceIncrease).toFixed(2)}`;
 };
 
+const blankImg = 'https://imgur.com/KNsnWx0.png'
+
 const StockScreen = ({ route }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scale, setScale] = useState(true)
   const [fav, setFav] = useState(false)
   const [loading, setLoading] = useState(false)
   const [imgLink, setImgLink] = useState('')
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 1200)
+  }, []);
 
   useEffect(async () => {
     setLoading(true)
@@ -31,7 +39,15 @@ const StockScreen = ({ route }) => {
   }, [selectedIndex]);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+    >
       <View style={styles.headerContainer}>
         <View style={styles.headerRightContainer}>
           <Text style={styles.price}>${route.params.now_price.toFixed(2)}</Text>
@@ -78,9 +94,12 @@ const StockScreen = ({ route }) => {
           <Text style={{ fontSize: 16 }}>高：${(route.params.high_price).toFixed(2)}</Text>
           <Text style={{ fontSize: 16 }}>低：${(route.params.low_price).toFixed(2)}</Text>
         </View>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>
+        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
           明日股價預測：$574.00
         </Text>
+      </View>
+      <View style={{ paddingHorizontal: 20 }}>
+        <View style={{ width: '100%', height: 1, borderWidth: 0.5, borderColor: '#ddd', marginTop: 15 }} />
       </View>
       <View style={styles.selector}>
         <ButtonGroup
@@ -94,27 +113,27 @@ const StockScreen = ({ route }) => {
       <View style={styles.chartContainer}>
         {scale ? (
           loading ? (
-            <ActivityIndicator size="large" color="#00bbf0" />
+            <ActivityIndicator size="large"/>
           ) : (
             <ScrollView style={styles.chartScroll} horizontal>
               <Image
-                source={{ uri: imgLink }}
+                source={{ uri: imgLink || blankImg }}
                 style={styles.chart}
                 resizeMode="contain"
-                placeholder={<ActivityIndicator size="large" color="#00bbf0" />}
+                placeholder={<ActivityIndicator size="large"/>}
               />
             </ScrollView>
           )
         ) : (
           loading ? (
-            <ActivityIndicator size="large" color="#00bbf0" />
+            <ActivityIndicator size="large"/>
           ) : (
             <View style={styles.chartScroll}>
               <Image
-                source={{ uri: imgLink }}
+                source={{ uri: imgLink || blankImg }}
                 style={styles.chartMinified}
                 resizeMode="contain"
-                placeholder={<ActivityIndicator size="large" color="#00bbf0" />}
+                placeholder={<ActivityIndicator size="large"/>}
               />
             </View>
             )
