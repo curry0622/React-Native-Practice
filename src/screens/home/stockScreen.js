@@ -16,6 +16,7 @@ const StockScreen = ({ route }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scale, setScale] = useState(true)
   const [fav, setFav] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   return (
     <ScrollView style={styles.container}>
@@ -60,9 +61,23 @@ const StockScreen = ({ route }) => {
         />
       </View>
       <View style={styles.infoContainer}>
-        <Text style={{ fontSize: 16 }}>開  ${(route.params.start_price).toFixed(2)}</Text>
-        <Text style={{ fontSize: 16 }}>高  ${(route.params.high_price).toFixed(2)}</Text>
-        <Text style={{ fontSize: 16 }}>低  ${(route.params.low_price).toFixed(2)}</Text>
+        <View style={styles.todayInfoContainer}>
+          <Text style={{ fontSize: 16 }}>開：${(route.params.start_price).toFixed(2)}</Text>
+          <Text style={{ fontSize: 16 }}>高：${(route.params.high_price).toFixed(2)}</Text>
+          <Text style={{ fontSize: 16 }}>低：${(route.params.low_price).toFixed(2)}</Text>
+        </View>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', fontStyle: 'italic' }}>
+          明日股價預測：$574.00
+        </Text>
+      </View>
+      <View style={styles.selector}>
+        <ButtonGroup
+          buttons={['MACD', 'KD', 'MA', '布林通道']}
+          selectedIndex={selectedIndex}
+          onPress={(value) => setSelectedIndex(value)}
+          containerStyle={styles.btnGrpContainer}
+          selectedButtonStyle={styles.selectedBtn}
+        />
       </View>
       <View style={styles.chartContainer}>
         {scale ? (
@@ -96,15 +111,6 @@ const StockScreen = ({ route }) => {
           onPress={() => setScale(!scale)}
         />
       </View>
-      <View style={styles.selector}>
-        <ButtonGroup
-          buttons={['MACD', 'KD', 'MA', '布林通道']}
-          selectedIndex={selectedIndex}
-          onPress={(value) => setSelectedIndex(value)}
-          containerStyle={styles.btnGrpContainer}
-          selectedButtonStyle={styles.selectedBtn}
-        />
-      </View>
     </ScrollView>
   )
 };
@@ -122,14 +128,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    // height: 'auto',
-    // borderWidth: 1,
-    // borderColor: '#ddd',
     padding: 20,
   },
   headerRightContainer: {
-    // borderWidth: 1,
-    // borderColor: '#ddd',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'flex-start',
@@ -137,28 +138,25 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 32,
     fontWeight: 'bold',
-    // borderWidth: 1,
-    // borderColor: '#ddd',
   },
   badgesContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    // marginBottom: 8,
   },
   infoContainer: {
+    display: 'flex',
+    width: '100%',
+    paddingHorizontal: 22,
+  },
+  todayInfoContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '100%',
-    paddingHorizontal: 22,
     marginBottom: 10,
-    // borderWidth: 1,
-    // borderColor: '#ddd',
   },
-  percentage: {},
   chartContainer: {
     display: 'flex',
     justifyContent: 'center',
@@ -166,19 +164,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 400,
     position: 'relative',
-    // borderWidth: 1,
-    // borderColor: '#ddd',
     paddingHorizontal: 20,
   },
   chartScroll: {
-    // display: 'flex',
-    // justifyContent: 'center',
-    // alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ddd',
     width: '100%',
     height: '100%',
-    // borderRadius: 5,
   },
   chart: {
     width: 540,
@@ -194,8 +186,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: 70,
-    // borderWidth: 1,
-    // borderColor: '#ddd',
     paddingHorizontal: 20,
   },
   btnGrpContainer: {
