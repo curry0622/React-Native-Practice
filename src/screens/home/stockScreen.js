@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator } from 'react-native';
 import { Badge, Button, ButtonGroup } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
+import getStockKD from '../../apis/getStockKD';
 
 const getPercentageText = (priceIncrease, startPrice) => {
   const percentage = (priceIncrease / startPrice) * 100;
@@ -17,6 +18,17 @@ const StockScreen = ({ route }) => {
   const [scale, setScale] = useState(true)
   const [fav, setFav] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [imgLink, setImgLink] = useState('')
+
+  useEffect(async () => {
+    setLoading(true)
+    console.log(route.params.number)
+    const tmp = await getStockKD('2230');
+    if (tmp) {
+      setImgLink(tmp)
+    }
+    setLoading(false)
+  }, [selectedIndex]);
 
   return (
     <ScrollView style={styles.container}>
@@ -81,23 +93,31 @@ const StockScreen = ({ route }) => {
       </View>
       <View style={styles.chartContainer}>
         {scale ? (
-          <ScrollView style={styles.chartScroll} horizontal>
-            <Image
-              source={{ uri: 'https://i.imgur.com/3tEY53m.jpg' }}
-              style={styles.chart}
-              resizeMode="contain"
-              placeholder={<ActivityIndicator size="large" color="#00bbf0" />}
-            />
-          </ScrollView>
+          loading ? (
+            <ActivityIndicator size="large" color="#00bbf0" />
+          ) : (
+            <ScrollView style={styles.chartScroll} horizontal>
+              <Image
+                source={{ uri: imgLink }}
+                style={styles.chart}
+                resizeMode="contain"
+                placeholder={<ActivityIndicator size="large" color="#00bbf0" />}
+              />
+            </ScrollView>
+          )
         ) : (
-          <View style={styles.chartScroll}>
-            <Image
-              source={{ uri: 'https://i.imgur.com/3tEY53m.jpg' }}
-              style={styles.chartMinified}
-              resizeMode="contain"
-              placeholder={<ActivityIndicator size="large" color="#00bbf0" />}
-            />
-          </View>
+          loading ? (
+            <ActivityIndicator size="large" color="#00bbf0" />
+          ) : (
+            <View style={styles.chartScroll}>
+              <Image
+                source={{ uri: imgLink }}
+                style={styles.chartMinified}
+                resizeMode="contain"
+                placeholder={<ActivityIndicator size="large" color="#00bbf0" />}
+              />
+            </View>
+            )
         )}
         <Button
           icon={{
