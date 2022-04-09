@@ -30,8 +30,7 @@ const StockScreen = ({ route }) => {
 
   useEffect(async () => {
     setLoading(true)
-    console.log(route.params.number)
-    const tmp = await getStockKD('2230');
+    const tmp = await getStockKD(route.params.number);
     if (tmp) {
       setImgLink(tmp)
     }
