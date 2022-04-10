@@ -1,9 +1,9 @@
 import axios from './axios';
 
-const getStockInfo = async (number) => {
+const getStockRSI = async (id) => {
   try {
     const response = await axios.get(
-      `/stock?number=${number}`,
+      `/rsi?id=${id}`,
     );
     return response.data;
   } catch (e) {
@@ -12,4 +12,4 @@ const getStockInfo = async (number) => {
   }
 };
 
-export default getStockInfo;
+export default getStockRSI;

@@ -2,7 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import { Badge, Button, ButtonGroup } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
+import getStockInfo from  '../../apis/getStockInfo';
+import getStockPred from  '../../apis/getStockPred';
+import getStockMACD from '../../apis/getStockMACD';
 import getStockKD from '../../apis/getStockKD';
+import getStockRSI from '../../apis/getStockRSI';
+import getStockBOOL from '../../apis/getStockBOOL';
 
 const getPercentageText = (priceIncrease, startPrice) => {
   const percentage = (priceIncrease / startPrice) * 100;
@@ -16,26 +21,62 @@ const getIncreaseText = (priceIncrease) => {
 const blankImg = 'https://imgur.com/KNsnWx0.png'
 
 const StockScreen = ({ route }) => {
+  const [stockInfo, setStockInfo] = useState(route.params);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scale, setScale] = useState(true)
   const [fav, setFav] = useState(false)
   const [loading, setLoading] = useState(false)
   const [imgLink, setImgLink] = useState('')
   const [refreshing, setRefreshing] = useState(false);
+  const [pred, setPred] = useState('');
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 1200)
+    const tmp = await getStockInfo(stockInfo.number);
+    if (tmp) {
+      setStockInfo(tmp);
+    }
+    setRefreshing(false);
   }, []);
 
   useEffect(async () => {
-    setLoading(true)
-    const tmp = await getStockKD(route.params.number);
-    if (tmp) {
-      setImgLink(tmp)
+    setLoading(true);
+    let tmp;
+    switch (selectedIndex) {
+      case 0:
+        tmp = await getStockMACD(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
+      case 1:
+        tmp = await getStockKD(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
+      case 2:
+        tmp = await getStockRSI(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
+      case 3:
+        tmp = await getStockBOOL(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
     }
-    setLoading(false)
+    setLoading(false);
   }, [selectedIndex]);
+
+  useEffect(async () => {
+    const tmp = await getStockPred(stockInfo.number);
+    if (tmp) {
+      setPred(tmp[0]);
+    }
+  }, [stockInfo]);
 
   return (
     <ScrollView
@@ -49,24 +90,24 @@ const StockScreen = ({ route }) => {
     >
       <View style={styles.headerContainer}>
         <View style={styles.headerRightContainer}>
-          <Text style={styles.price}>${route.params.now_price.toFixed(2)}</Text>
+          <Text style={styles.price}>${parseInt(stockInfo.now_price).toFixed(2)}</Text>
           <View style={styles.badgesContainer}>
             <Badge
               containerStyle={{ marginRight: 5 }}
-              value={getPercentageText(route.params.price_increase, route.params.now_price)}
-              status={route.params.price_increase > 0 ? 'error' : 'success'}
+              value={getPercentageText(stockInfo.price_increase, stockInfo.now_price)}
+              status={stockInfo.price_increase > 0 ? 'error' : 'success'}
             />
             <Badge
               badgeStyle={{
                 backgroundColor: '#fff',
                 borderWidth: 1.5,
-                borderColor: route.params.price_increase > 0 ? '#f44336' : '#52c41a'
+                borderColor: stockInfo.price_increase > 0 ? '#f44336' : '#52c41a'
               }}
               textStyle={{
-                color: route.params.price_increase > 0 ? '#f44336' : '#52c41a',
+                color: stockInfo.price_increase > 0 ? '#f44336' : '#52c41a',
                 fontWeight: 'bold'
               }}
-              value={getIncreaseText(route.params.price_increase)}
+              value={getIncreaseText(stockInfo.price_increase)}
             />
           </View>
         </View>
@@ -89,12 +130,12 @@ const StockScreen = ({ route }) => {
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.todayInfoContainer}>
-          <Text style={{ fontSize: 16 }}>開：${(route.params.start_price).toFixed(2)}</Text>
-          <Text style={{ fontSize: 16 }}>高：${(route.params.high_price).toFixed(2)}</Text>
-          <Text style={{ fontSize: 16 }}>低：${(route.params.low_price).toFixed(2)}</Text>
+          <Text style={{ fontSize: 16 }}>開：${parseInt(stockInfo.start_price).toFixed(2)}</Text>
+          <Text style={{ fontSize: 16 }}>高：${parseInt(stockInfo.high_price).toFixed(2)}</Text>
+          <Text style={{ fontSize: 16 }}>低：${parseInt(stockInfo.low_price).toFixed(2)}</Text>
         </View>
         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-          明日股價預測：$574.00
+          明日股價預測：${parseInt(pred).toFixed(2)}
         </Text>
       </View>
       <View style={{ paddingHorizontal: 20 }}>
@@ -102,7 +143,7 @@ const StockScreen = ({ route }) => {
       </View>
       <View style={styles.selector}>
         <ButtonGroup
-          buttons={['MACD', 'KD', 'MA', '布林通道']}
+          buttons={['MACD', 'KD', 'RSI', '布林通道']}
           selectedIndex={selectedIndex}
           onPress={(value) => setSelectedIndex(value)}
           containerStyle={styles.btnGrpContainer}
