@@ -3,12 +3,12 @@ import axios from './axios';
 const getStockMACD = async (id) => {
   try {
     const response = await axios.get(
-      `/macd_draw?id=${id}`,
+      `/macd?id=${id}`,
     );
     return response.data;
   } catch (e) {
-    alert(e);
-    console.log(e);
+    alert(`/macd?id=${id}`, e);
+    console.log(`/macd?id=${id}`, e);
   }
 };
 

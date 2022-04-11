@@ -7,8 +7,8 @@ const getStockInfo = async (number) => {
     );
     return response.data;
   } catch (e) {
-    alert(e);
-    console.log(e);
+    alert(`/stock?number=${number}`, e);
+    console.log(`/stock?number=${number}`, e);
   }
 };
 

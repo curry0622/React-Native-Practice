@@ -7,8 +7,8 @@ const getStockPred = async (id) => {
     );
     return response.data;
   } catch (e) {
-    alert(e);
-    console.log(e);
+    alert(`/predict_stock?number=${id}`, e);
+    console.log(`/predict_stock?number=${id}`, e);
   }
 };
 

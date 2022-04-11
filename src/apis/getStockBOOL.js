@@ -7,8 +7,8 @@ const getStockBOOL = async (id) => {
     );
     return response.data;
   } catch (e) {
-    alert(e);
-    console.log(e);
+    alert(`/bool?id=${id}`, e);
+    console.log(`/bool?id=${id}`, e);
   }
 };
 

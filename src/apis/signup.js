@@ -7,8 +7,8 @@ const signup = async ({ name, pwd }) => {
     );
     return response.data;
   } catch (e) {
-    alert(e);
-    console.log(e);
+    alert(`/sign_up/${name}?user_pwd=${pwd}&comfirm_pwd=${pwd}`, e);
+    console.log(`/sign_up/${name}?user_pwd=${pwd}&comfirm_pwd=${pwd}`, e);
   }
 };
 

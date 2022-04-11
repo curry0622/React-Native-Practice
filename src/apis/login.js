@@ -7,8 +7,8 @@ const login = async ({ name, pwd }) => {
     );
     return response.data;
   } catch (e) {
-    alert(e);
-    console.log(e);
+    alert(`/log_in/${name}?user_pwd=${pwd}`, e);
+    console.log(`/log_in/${name}?user_pwd=${pwd}`, e);
   }
 };
 

@@ -7,8 +7,8 @@ const getStockRSI = async (id) => {
     );
     return response.data;
   } catch (e) {
-    alert(e);
-    console.log(e);
+    alert(`/rsi?id=${id}`, e);
+    console.log(`/rsi?id=${id}`, e);
   }
 };
 

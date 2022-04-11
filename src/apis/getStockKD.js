@@ -7,8 +7,8 @@ const getStockKD = async (id) => {
     );
     return response.data;
   } catch (e) {
-    alert(e);
-    console.log(e);
+    alert(`/golden?id=${id}`, e);
+    console.log(`/golden?id=${id}`, e);
   }
 };
 
