@@ -9,7 +9,7 @@ const getCryptoInfo = async (name) => {
     console.log(`/coin?name=${name}`, 'fulfilled');
     return response.data;
   } catch (e) {
-    alert('請輸入正確的股票代碼');
+    alert('請輸入正確的幣種名稱');
     console.log(`/coin?name=${name}`, e);
   }
 };

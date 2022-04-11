@@ -11,31 +11,31 @@ const SettingScreen = ({ navigation }) => {
     <ScrollView style={styles.container} >
       <View style={styles.listItemsContainer}>
         <Ionicons name="person-circle-sharp" size={72} color={`${name === '' ? '#707070' : '#00bbf0'}`} />
-        <Text style={{ fontSize: 24, color: '#707070' }}>{name === '' ? '尚未登入' : name}</Text>
+        <Text style={{ fontSize: 18, color: '#707070' }}>{name === '' ? '尚未登入' : name}</Text>
+        <Button
+          title={name === '' ? '登入': '切換帳號'}
+          raised
+          containerStyle={{
+            width: 120,
+            margin: 20,
+          }}
+          buttonStyle={{
+            backgroundColor: '#00bbf0'
+          }}
+          onPress={() => navigation.push('Login')}
+        />
+        <Button
+          title="註冊"
+          raised
+          containerStyle={{
+            width: 120,
+          }}
+          buttonStyle={{
+            backgroundColor: '#00bbf0'
+          }}
+          onPress={() => navigation.push('Signup')}
+        />
       </View>
-      <Button
-        title="登入"
-        raised
-        containerStyle={{
-          marginHorizontal: 120,
-          marginVertical: 20,
-        }}
-        buttonStyle={{
-          backgroundColor: '#00bbf0'
-        }}
-        onPress={() => navigation.push('Login')}
-      />
-      <Button
-        title="註冊"
-        raised
-        containerStyle={{
-          marginHorizontal: 120,
-        }}
-        buttonStyle={{
-          backgroundColor: '#00bbf0'
-        }}
-        onPress={() => navigation.push('Signup')}
-      />
     </ScrollView >
   )
 };
@@ -48,14 +48,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   listItemsContainer: {
-    paddingTop: 30,
     width: '100%',
+    height: 400,
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
-  },
-  listItem: {
-    height: 72,
+    alignItems: 'center',
+    flexDirection: 'column',
     paddingHorizontal: 20,
   }
 });

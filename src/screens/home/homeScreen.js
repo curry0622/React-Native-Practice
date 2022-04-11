@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator } from 'react-native';
 import { ListItem, Badge, ButtonGroup, Input, Button } from 'react-native-elements';
-import { FontAwesome5 } from '@expo/vector-icons';
 import UserContext from '../../contexts/userContext';
 import getFavStocks from '../../apis/getFavStocks';
 import getRcmdStocks from '../../apis/getRcmdStocks';
@@ -281,8 +280,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#00bbf0',
   },
   hint: {
-    // borderWidth: 1,
-    // borderColor: '#ddd',
     width: '100%',
     height: 72,
     display: 'flex',

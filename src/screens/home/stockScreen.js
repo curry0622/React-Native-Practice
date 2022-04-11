@@ -48,7 +48,9 @@ const StockScreen = ({ route }) => {
   }, []);
 
   const onPressAdd = async () => {
-    if (fav) {
+    if (stockInfo.number === '0000') {
+      return;
+    } else if (fav) {
       setFav(false);
       const tmp = await delFavStock({ name, stockNum: stockInfo.number });
       if (!tmp) {
@@ -116,12 +118,16 @@ const StockScreen = ({ route }) => {
   }, [stockInfo]);
 
   useEffect(async () => {
-    setFavLoading(true);
-    const tmp = await getFavStocks(name);
-    if (tmp) {
-      setFav(tmp.filter(e => e.number === stockInfo.number).length > 0)
+    if (stockInfo.number === '0000') {
+      setFav(true);
+    } else {
+      setFavLoading(true);
+      const tmp = await getFavStocks(name);
+      if (tmp) {
+        setFav(tmp.filter(e => e.number === stockInfo.number).length > 0)
+      }
+      setFavLoading(false);
     }
-    setFavLoading(false);
   }, [name]);
 
   return (

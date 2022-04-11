@@ -174,7 +174,7 @@ const CryptoScreen = ({ route }) => {
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.todayInfoContainer}>
-          <Text style={{ fontSize: 16 }}>高：${cryptoInfo.high_price}</Text>
+          <Text style={{ fontSize: 16, marginRight: 20 }}>高：${cryptoInfo.high_price}</Text>
           <Text style={{ fontSize: 16 }}>低：${cryptoInfo.low_price}</Text>
         </View>
         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
   todayInfoContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     marginBottom: 10,
   },
