@@ -12,7 +12,7 @@ const HomeScreen = ({ navigation }) => {
   const { name, setName } = useContext(UserContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  const [favStocks, setFavStocks] = useState([]);
+  const [favStocks, setFavStocks] = useState(null);
   const [rcmdStocks, setRcmdStocks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchVal, setSearchVal] = useState(0);
@@ -24,11 +24,11 @@ const HomeScreen = ({ navigation }) => {
       setFavStocks([...tmp]);
     }
     setRefreshing(false)
-  }, []);
+  }, [name]);
 
   const onPressStock = (stock) => {
-    if (stock.number !== '0000')
-      navigation.navigate('Stock', { ...stock });
+    // if (stock.number !== '0000')
+    navigation.navigate('Stock', { ...stock });
   };
 
   const onSearch = async (type) => {
@@ -36,10 +36,10 @@ const HomeScreen = ({ navigation }) => {
     if (type === 'stock') {
       const tmp = await getStockInfo(searchVal);
       if (tmp) {
-        setSearchVal('')
         setLoading(false)
         navigation.navigate('Stock', { ...tmp });
       }
+      setSearchVal('')
     }
     setLoading(false);
   };
@@ -50,7 +50,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(async () => {
-    // setLoading(true);
+    setLoading(true);
     let tmp = await getFavStocks(name);
     if (tmp) {
       setFavStocks([...tmp]);
@@ -60,7 +60,7 @@ const HomeScreen = ({ navigation }) => {
       setRcmdStocks([...tmp]);
     }
     setLoading(false);
-  }, []);
+  }, [name]);
 
   const createFavStockBars = [...new Set(favStocks)].map((stock) => (
     <View style={styles.listItem}>
@@ -85,7 +85,7 @@ const HomeScreen = ({ navigation }) => {
           value={getPercentageText(stock.price_increase, stock.now_price)}
           status={stock.price_increase > 0 ? 'error' : 'success'}
         />
-        <ListItem.Chevron color={stock.number !== '0000' ? '#707070' : '#ddd'} />
+        <ListItem.Chevron color="#707070" />
       </ListItem>
     </View>
   ));
@@ -145,7 +145,7 @@ const HomeScreen = ({ navigation }) => {
     >
       {loading ? (
         <View style={{ marginTop: '65%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ marginBottom: 30 }}>處理中，清稍後...</Text>
+          <Text style={{ marginBottom: 30 }}>處理中，請稍候...</Text>
           <ActivityIndicator size="large" />
         </View>
       ) : (
@@ -166,10 +166,10 @@ const HomeScreen = ({ navigation }) => {
             leftIcon={{ type: 'font-awesome', name: 'search', size: 20, color: '#707070' }}
             value={searchVal}
             onChange={(e) => setSearchVal(e.nativeEvent.text)}
-            onSubmitEditing={(e) => onSearch('stock')}
+            onSubmitEditing={() => onSearch('stock')}
           />
-          <Text style={{ marginBottom: name === '' ? 0 : 15 }}>[ 我的最愛 ]</Text>
-          {name === ''
+          <Text style={{ marginBottom: !favStocks ? 0 : 15 }}>[ 我的最愛 ]</Text>
+          {!favStocks
             ? <View style={styles.loginHint}><Text style={{ color: '#707070' }}>- 尚未登入 -</Text></View>
             : (
               selectedIndex === 0 ? createFavStockBars : createCryptoBars

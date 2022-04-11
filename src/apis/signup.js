@@ -1,14 +1,14 @@
 import axios from './axios';
 
-const signup = async ({ name, pwd }) => {
+const signup = async ({ name, psw }) => {
   try {
-    console.log(`/sign_up/${name}?user_pwd=${pwd}&comfirm_pwd=${pwd}`, 'pending');
-    const response = await axios.get(`/sign_up/${name}?user_pwd=${pwd}&comfirm_pwd=${pwd}`);
-    console.log(`/sign_up/${name}?user_pwd=${pwd}&comfirm_pwd=${pwd}`, 'fulfilled');
+    console.log(`/sign_up/${name}?user_pwd=${psw}&comfirm_pwd=${psw}`, 'pending');
+    const response = await axios.get(`/sign_up/${name}?user_pwd=${psw}&comfirm_pwd=${psw}`);
+    console.log(`/sign_up/${name}?user_pwd=${psw}&comfirm_pwd=${psw}`, 'fulfilled');
     return response.data;
   } catch (e) {
-    alert(`/sign_up/${name}?user_pwd=${pwd}&comfirm_pwd=${pwd}`, e);
-    console.log(`/sign_up/${name}?user_pwd=${pwd}&comfirm_pwd=${pwd}`, e);
+    alert(`/sign_up/${name}?user_pwd=${psw}&comfirm_pwd=${psw}`, e);
+    console.log(`/sign_up/${name}?user_pwd=${psw}&comfirm_pwd=${psw}`, e);
   }
 };
 

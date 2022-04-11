@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import UserContext from '../../contexts/userContext';
@@ -6,23 +6,25 @@ import login from '../../apis/login';
 
 const LoginScreen = ({ navigation }) => {
   const { name, setName } = useContext(UserContext);
-  const [showPsw, setShowPsw] = useState(false);
   const [psw, setPsw] = useState('');
+  const [tmpName, setTmpName] = useState('');
   const [loading, setLoading] = useState(false);
 
   const onClickLogin = async () => {
     setLoading(true);
-    if ((name.length == 0) || (psw.length == 0)) {
+    if ((tmpName.length == 0) || (psw.length == 0)) {
       alert('Required field is missing');
     } else if (((/[ ]/).test(psw))) {
       alert('Don\'t include space in password');
     } else {
-      const tmp = await login({ name, psw });
+      const tmp = await login({ name: tmpName, psw });
       if (tmp) {
         if (tmp.Successful) {
-          alert(`Welcome ${name}`);
+          setName(tmpName);
+          alert(`Welcome ${tmpName}`);
           navigation.popToTop();
         } else {
+          console.log(tmp);
           alert('Login failed');
         }
       }
@@ -37,12 +39,12 @@ const LoginScreen = ({ navigation }) => {
           label="Name"
           keyboardType="default"
           inputContainerStyle={styles.input}
-          onChange={e => setName(e.nativeEvent.text)}
+          onChange={e => setTmpName(e.nativeEvent.text)}
         />
         <Input
           label="Password"
           keyboardType='default'
-          secureTextEntry={!showPsw}
+          secureTextEntry={true}
           inputContainerStyle={styles.input}
           onChange={e => setPsw(e.nativeEvent.text)}
         />

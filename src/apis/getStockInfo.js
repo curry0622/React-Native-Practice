@@ -9,7 +9,7 @@ const getStockInfo = async (number) => {
     console.log(`/stock?number=${number}`, 'fulfilled');
     return response.data;
   } catch (e) {
-    alert(`/stock?number=${number}`, e);
+    alert('請輸入正確的股票代碼');
     console.log(`/stock?number=${number}`, e);
   }
 };

@@ -8,20 +8,22 @@ const SignupScreen = ({ navigation }) => {
   const { name, setName } = useContext(UserContext);
   const [showPsw, setShowPsw] = useState(false);
   const [psw, setPsw] = useState('');
+  const [tmpName, setTmpName] = useState('');
   const [confirmPsw, setConfirmPsw] = useState('');
 
   const onClickRegister = async () => {
-    if ((name.length == 0) || (psw.length == 0) || (confirmPsw.length == 0)) {
+    if ((tmpName.length == 0) || (psw.length == 0) || (confirmPsw.length == 0)) {
       alert('Required field is missing');
     } else if (((/[ ]/).test(psw))) {
       alert('Don\'t include space in password');
     } else if (psw !== confirmPsw) {
       alert('Password doesn\'t match');
     } else {
-      const tmp = await signup({ name, psw });
+      const tmp = await signup({ name: tmpName, psw });
       if (tmp) {
         if (tmp.Successful) {
-          alert(`Welcome ${name}`);
+          setName(tmpName);
+          alert(`Welcome ${tmpName}`);
           navigation.popToTop();
         } else {
           alert('Sign up failed');
@@ -37,7 +39,7 @@ const SignupScreen = ({ navigation }) => {
           label="Name"
           keyboardType="default"
           inputContainerStyle={styles.input}
-          onChange={e => setName(e.nativeEvent.text)}
+          onChange={e => setTmpName(e.nativeEvent.text)}
         />
         <Input
           label="Password"
