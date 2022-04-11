@@ -236,7 +236,7 @@ const HomeScreen = ({ navigation }) => {
             ? <View style={styles.hint}><Text style={{ color: '#707070' }}>- 尚未登入 -</Text></View>
             : (selectedIndex === 0 ? createFavStockBars : createFavCryptoBars)
           }
-          {selectedIndex === 1 && (!favCryptos || favCryptos.length === 0) && <View style={styles.hint}><Text style={{ color: '#707070' }}>- 尚無最愛幣種 -</Text></View>}
+          {name !== '' && selectedIndex === 1 && (!favCryptos || favCryptos.length === 0) && <View style={styles.hint}><Text style={{ color: '#707070' }}>- 尚無最愛幣種 -</Text></View>}
           <Text style={{ marginBottom: 15 }}>[ 推薦{`${selectedIndex === 0 ? '台股' : '幣種'}`} ]</Text>
           {selectedIndex === 0 ? createRcmdStockBars : createRcmdCryptoBars}
         </View>
