@@ -25,7 +25,8 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   const onPressStock = (stock) => {
-    navigation.navigate('Stock', { ...stock });
+    if (stock.number !== '0000')
+      navigation.navigate('Stock', { ...stock });
   };
 
   const getPercentageText = (priceIncrease, startPrice) => {
@@ -55,7 +56,11 @@ const HomeScreen = ({ navigation }) => {
       >
         <ListItem.Content>
           <ListItem.Title style={styles.title}>
-            {`[${stock.number}]  ${stock.name}  $${parseInt(stock.now_price).toFixed(2)}`}
+            {stock.number === '0000' ? (
+              `${stock.name}  $${parseInt(stock.now_price).toFixed(2)}`
+            ) : (
+              `[${stock.number}]  ${stock.name}  $${parseInt(stock.now_price).toFixed(2)}`
+            )}
           </ListItem.Title>
           <ListItem.Subtitle style={styles.subtitle}>
             {`開${stock.start_price}  高${stock.high_price}  低${stock.low_price}`}

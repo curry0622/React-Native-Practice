@@ -31,12 +31,11 @@ const StockScreen = ({ route }) => {
   const [stockInfo, setStockInfo] = useState(route.params);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scale, setScale] = useState(true)
-  const [fav, setFav] = useState(true)
+  const [fav, setFav] = useState(false)
   const [loading, setLoading] = useState(false)
   const [imgLink, setImgLink] = useState('')
   const [refreshing, setRefreshing] = useState(false);
   const [pred, setPred] = useState('');
-  const [favStocks, setFavStocks] = useState([]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -49,14 +48,16 @@ const StockScreen = ({ route }) => {
 
   const onPressAdd = async () => {
     if (fav) {
+      setFav(false);
       const tmp = await delFavStock({ name, stockNum: stockInfo.number });
-      if (tmp) {
-        setFav(false);
+      if (!tmp) {
+        setFav(true);
       }
     } else {
+      setFav(true);
       const tmp = await addFavStock({ name, stockNum: stockInfo.number });
-      if (tmp) {
-        setFav(true)
+      if (!tmp) {
+        setFav(false);
       }
     }
   };
@@ -115,13 +116,9 @@ const StockScreen = ({ route }) => {
   useEffect(async () => {
     const tmp = await getFavStocks(name);
     if (tmp) {
-      setFavStocks([...tmp]);
+      setFav(tmp.filter(e => e.number === stockInfo.number).length > 0)
     }
   }, [name]);
-
-  useEffect(() => {
-    setFav(favStocks.filter(e => e.number === stockInfo.number).length > 0)
-  }, [favStocks]);
 
   return (
     <ScrollView
