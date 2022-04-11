@@ -1,8 +1,7 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
-import { StyleSheet, View, ScrollView, RefreshControl, Text } from 'react-native';
+import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator } from 'react-native';
 import { ListItem, Badge, ButtonGroup } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
-import stocks from './stocks.json';
 import cryptos from './cryptos.json';
 import UserContext from '../../contexts/userContext';
 import getFavStocks from '../../apis/getFavStocks';
@@ -14,13 +13,13 @@ const HomeScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [favStocks, setFavStocks] = useState([]);
   const [rcmdStocks, setRcmdStocks] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     const tmp = await getFavStocks(name);
     if (tmp) {
       setFavStocks([...tmp]);
-      // console.log(tmp)
     }
     setRefreshing(false)
   }, []);
@@ -35,16 +34,16 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(async () => {
+    setLoading(true);
     let tmp = await getFavStocks(name);
     if (tmp) {
       setFavStocks([...tmp]);
-      // setFavStocks([...stocks]);
-      // console.log(tmp)
     }
     tmp = await getRcmdStocks();
     if (tmp) {
       setRcmdStocks([...tmp]);
     }
+    setLoading(false);
   }, []);
 
   const createFavStockBars = favStocks.map((stock) => (
@@ -126,16 +125,19 @@ const HomeScreen = ({ navigation }) => {
     >
       <View style={styles.listItemsContainer}>
         <ButtonGroup
-          buttons={['股市', '虛擬貨幣']}
+          buttons={['台灣股市', '虛擬貨幣']}
           selectedIndex={selectedIndex}
           onPress={(value) => setSelectedIndex(value)}
           containerStyle={styles.btnGrpContainer}
           selectedButtonStyle={styles.selectedBtn}
         />
-        <Text style={{ marginBottom: 15 }}>[ 我的最愛 ]</Text>
-        {selectedIndex === 0 ? createFavStockBars : createCryptoBars}
+        <Text style={{ marginBottom: name === '' ? 0 : 15 }}>[ 我的最愛 ]</Text>
+        {name === '' ? <View style={styles.loginHint}><Text style={{ color: '#707070' }}>- 尚未登入 -</Text></View> : (
+          selectedIndex === 0 ? createFavStockBars : createCryptoBars
+        )}
         {selectedIndex === 0 && <Text style={{ marginBottom: 15 }}>[ 推薦台股 ]</Text>}
         {selectedIndex === 0 && createRcmdStockBars}
+        {loading && <View style={{ marginTop: 50 }}><ActivityIndicator /></View>}
       </View>
     </ScrollView >
   )
@@ -175,5 +177,14 @@ const styles = StyleSheet.create({
   },
   selectedBtn: {
     backgroundColor: '#00bbf0',
+  },
+  loginHint: {
+    // borderWidth: 1,
+    // borderColor: '#ddd',
+    width: '100%',
+    height: 72,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });

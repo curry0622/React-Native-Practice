@@ -3,6 +3,7 @@ import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator, RefreshCo
 import { Badge, Button, ButtonGroup } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import UserContext from '../../contexts/userContext';
+import getFavStocks from '../../apis/getFavStocks';
 import getStockInfo from  '../../apis/getStockInfo';
 import getStockHist from '../../apis/getStockHist';
 import getStockPred from  '../../apis/getStockPred';
@@ -35,6 +36,7 @@ const StockScreen = ({ route }) => {
   const [imgLink, setImgLink] = useState('')
   const [refreshing, setRefreshing] = useState(false);
   const [pred, setPred] = useState('');
+  const [favStocks, setFavStocks] = useState([]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -45,49 +47,63 @@ const StockScreen = ({ route }) => {
     setRefreshing(false);
   }, []);
 
-  useEffect(async () => {
-    setLoading(true);
-    let tmp;
-    switch (selectedIndex) {
-      case 0:
-        tmp = await getStockHist(stockInfo.number);
-        if (tmp) {
-          setImgLink(tmp);
-        }
-        break;
-      case 1:
-        tmp = await getStockMACD(stockInfo.number);
-        if (tmp) {
-          setImgLink(tmp);
-        }
-        break;
-      case 2:
-        tmp = await getStockKD(stockInfo.number);
-        if (tmp) {
-          setImgLink(tmp);
-        }
-        break;
-      case 3:
-        tmp = await getStockMACDOP(stockInfo.number);
-        if (tmp) {
-          setImgLink(tmp);
-        }
-        break;
-      case 4:
-        tmp = await getStockRSI(stockInfo.number);
-        if (tmp) {
-          setImgLink(tmp);
-        }
-        break;
-      case 5:
-        tmp = await getStockBOOL(stockInfo.number);
-        if (tmp) {
-          setImgLink(tmp);
-        }
-        break;
+  const onPressAdd = async () => {
+    if (fav) {
+      const tmp = await delFavStock({ name, stockNum: stockInfo.number });
+      if (tmp) {
+        setFav(false);
+      }
+    } else {
+      const tmp = await addFavStock({ name, stockNum: stockInfo.number });
+      if (tmp) {
+        setFav(true)
+      }
     }
-    setLoading(false);
-  }, [selectedIndex]);
+  };
+
+  // useEffect(async () => {
+  //   setLoading(true);
+  //   let tmp;
+  //   switch (selectedIndex) {
+  //     case 0:
+  //       tmp = await getStockHist(stockInfo.number);
+  //       if (tmp) {
+  //         setImgLink(tmp);
+  //       }
+  //       break;
+  //     case 1:
+  //       tmp = await getStockMACD(stockInfo.number);
+  //       if (tmp) {
+  //         setImgLink(tmp);
+  //       }
+  //       break;
+  //     case 2:
+  //       tmp = await getStockKD(stockInfo.number);
+  //       if (tmp) {
+  //         setImgLink(tmp);
+  //       }
+  //       break;
+  //     case 3:
+  //       tmp = await getStockMACDOP(stockInfo.number);
+  //       if (tmp) {
+  //         setImgLink(tmp);
+  //       }
+  //       break;
+  //     case 4:
+  //       tmp = await getStockRSI(stockInfo.number);
+  //       if (tmp) {
+  //         setImgLink(tmp);
+  //       }
+  //       break;
+  //     case 5:
+  //       tmp = await getStockBOOL(stockInfo.number);
+  //       if (tmp) {
+  //         setImgLink(tmp);
+  //       }
+  //       break;
+  //   }
+  //   setLoading(false);
+  // }, [selectedIndex]);
 
   useEffect(async () => {
     const tmp = await getStockPred(stockInfo.number);
@@ -97,18 +113,15 @@ const StockScreen = ({ route }) => {
   }, [stockInfo]);
 
   useEffect(async () => {
-    if (fav) {
-      const tmp = await addFavStock({ name, stockNum: stockInfo.number });
-      if (tmp) {
-        console.log('/add_fav_stock', tmp)
-      }
-    } else {
-      const tmp = await delFavStock({ name, stockNum: stockInfo.number });
-      if (tmp) {
-        console.log('/del_fav_stock', tmp);
-      }
+    const tmp = await getFavStocks(name);
+    if (tmp) {
+      setFavStocks([...tmp]);
     }
-  }, [fav]);
+  }, [name]);
+
+  useEffect(() => {
+    setFav(favStocks.filter(e => e.number === stockInfo.number).length > 0)
+  }, [favStocks]);
 
   return (
     <ScrollView
@@ -157,7 +170,7 @@ const StockScreen = ({ route }) => {
             borderColor: '#ddd',
             borderRadius: 5,
           }}
-          onPress={() => setFav(!fav)}
+          onPress={() => onPressAdd()}
         />
       </View>
       <View style={styles.infoContainer}>
@@ -285,7 +298,6 @@ const styles = StyleSheet.create({
   chartScroll: {
     borderWidth: 1,
     borderColor: '#ddd',
-    // borderRadius: 5,
     width: '100%',
     height: '100%',
   },

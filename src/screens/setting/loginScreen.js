@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Button, Input } from 'react-native-elements';
-import { Ionicons } from '@expo/vector-icons';
 import UserContext from '../../contexts/userContext';
 import login from '../../apis/login';
 
@@ -9,8 +8,10 @@ const LoginScreen = ({ navigation }) => {
   const { name, setName } = useContext(UserContext);
   const [showPsw, setShowPsw] = useState(false);
   const [psw, setPsw] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const onClickLogin = async () => {
+    setLoading(true);
     if ((name.length == 0) || (psw.length == 0)) {
       alert('Required field is missing');
     } else if (((/[ ]/).test(psw))) {
@@ -26,6 +27,7 @@ const LoginScreen = ({ navigation }) => {
         }
       }
     }
+    setLoading(false);
   };
 
   return (
@@ -43,28 +45,17 @@ const LoginScreen = ({ navigation }) => {
           secureTextEntry={!showPsw}
           inputContainerStyle={styles.input}
           onChange={e => setPsw(e.nativeEvent.text)}
-          // rightIcon={
-          //   !showPsw
-          //   ? <Ionicons name="ios-eye" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />
-          //   : <Ionicons name="ios-eye-off" size={24} color="#969696" onPress={() => setShowPsw(!showPsw)} />}
         />
       </View>
       <Button
-        title="Log in"
+        title={loading ? '' : 'Login'}
         type="solid"
         raised
         buttonStyle={styles.btn}
         containerStyle={styles.btnContainer}
         onPress={() => onClickLogin()}
+        icon={loading && <ActivityIndicator color="white" />}
       />
-      {/* <Button
-        title="Forgot Password ?"
-        type="solid"
-        titleStyle={{ color: '#00bbf0' }}
-        buttonStyle={{ ...styles.btn, ...styles.whiteBtn }}
-        containerStyle={styles.btnContainer}
-        onPress={() => navigation.popToTop()}
-      /> */}
       <View style={styles.divider} />
       <Text style={styles.hintTxt}>Don't have an account ?</Text>
       <Button
