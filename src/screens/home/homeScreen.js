@@ -7,6 +7,7 @@ import getFavStocks from '../../apis/getFavStocks';
 import getRcmdStocks from '../../apis/getRcmdStocks';
 import getRcmdCryptos from '../../apis/getRcmdCryptos';
 import getStockInfo from '../../apis/getStockInfo';
+import getCryptoInfo from '../../apis/getCryptoInfo';
 import getFavCryptos from '../../apis/getFavCryptos';
 
 const HomeScreen = ({ navigation }) => {
@@ -36,10 +37,14 @@ const HomeScreen = ({ navigation }) => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await refreshFavStocks();
-    await refreshFavCryptos();
+    if (selectedIndex === 0) {
+      await refreshFavStocks();
+    }
+    else {
+      await refreshFavCryptos();
+    }
     setRefreshing(false)
-  }, [name]);
+  }, [name, selectedIndex]);
 
   const onPressStock = (stock) => {
     navigation.navigate('Stock', { ...stock, refreshFavStocks });
@@ -51,11 +56,18 @@ const HomeScreen = ({ navigation }) => {
 
   const onSearch = async (type) => {
     setLoading(true);
-    if (type === 'stock') {
+    if (selectedIndex === 0) {
       const tmp = await getStockInfo(searchVal);
       if (tmp) {
-        setLoading(false)
+        setLoading(false);
         navigation.navigate('Stock', { ...tmp, refreshFavStocks });
+      }
+      setSearchVal('')
+    } else {
+      const tmp = await getCryptoInfo(searchVal.toUpperCase());
+      if (tmp) {
+        setLoading(false);
+        navigation.navigate('Crypto', { ...tmp, refreshFavCryptos });
       }
       setSearchVal('')
     }
@@ -68,12 +80,21 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(async () => {
-    // setLoading(true);
+    setLoading(true);
     let tmp = await getFavStocks(name);
     if (tmp) {
       setFavStocks([...tmp]);
     }
-    tmp = await getRcmdStocks();
+    tmp = await getFavCryptos(name);
+    if (tmp) {
+      setFavCryptos([...tmp]);
+    }
+    setLoading(false);
+  }, [name]);
+
+  useEffect(async () => {
+    setLoading(true);
+    let tmp = await getRcmdStocks();
     if (tmp) {
       setRcmdStocks([...tmp]);
     }
@@ -82,7 +103,7 @@ const HomeScreen = ({ navigation }) => {
       setRcmdCryptos([...tmp]);
     }
     setLoading(false);
-  }, [name]);
+  }, []);
 
   const createFavStockBars = [...new Set(favStocks)].map((stock) => (
     <View style={styles.listItem}>
@@ -207,15 +228,15 @@ const HomeScreen = ({ navigation }) => {
             leftIcon={{ type: 'font-awesome', name: 'search', size: 20, color: '#707070' }}
             value={searchVal}
             onChange={(e) => setSearchVal(e.nativeEvent.text)}
-            onSubmitEditing={() => onSearch('stock')}
+            onSubmitEditing={() => onSearch()}
           />
-          <Text style={{ marginBottom: (selectedIndex === 0 && !favStocks) || (selectedIndex === 1 && !favCryptos) ? 0 : 15 }}>[ 我的最愛 ]</Text>
+          <Text style={{ marginBottom: 15 }}>[ 我的最愛 ]</Text>
           {
-            !favStocks && !favCryptos
+            name === ''
             ? <View style={styles.hint}><Text style={{ color: '#707070' }}>- 尚未登入 -</Text></View>
             : (selectedIndex === 0 ? createFavStockBars : createFavCryptoBars)
           }
-          {selectedIndex === 1 && favStocks && !favCryptos && <View style={styles.hint}><Text style={{ color: '#707070' }}>- 尚無最愛幣種 -</Text></View>}
+          {selectedIndex === 1 && (!favCryptos || favCryptos.length === 0) && <View style={styles.hint}><Text style={{ color: '#707070' }}>- 尚無最愛幣種 -</Text></View>}
           <Text style={{ marginBottom: 15 }}>[ 推薦{`${selectedIndex === 0 ? '台股' : '幣種'}`} ]</Text>
           {selectedIndex === 0 ? createRcmdStockBars : createRcmdCryptoBars}
         </View>
@@ -267,5 +288,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: -15,
   }
 });

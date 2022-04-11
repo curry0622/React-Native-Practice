@@ -179,11 +179,10 @@ const CryptoScreen = ({ route }) => {
         </View>
         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
           明日股價預測：${pred || ((
-            parseInt(cryptoInfo.now_price) +
-            parseInt(cryptoInfo.high_price) +
-            parseInt(cryptoInfo.low_price) +
-            parseInt(cryptoInfo.start_price)
-          ) / 4).toFixed(2)}
+            parseFloat(cryptoInfo.now_price) +
+            parseFloat(cryptoInfo.high_price) +
+            parseFloat(cryptoInfo.low_price)
+          ) / 3)}
         </Text>
       </View>
       <View style={styles.selector}>

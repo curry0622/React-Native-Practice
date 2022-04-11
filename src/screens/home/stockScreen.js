@@ -189,10 +189,10 @@ const StockScreen = ({ route }) => {
         </View>
         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
           明日股價預測：${pred || ((
-            parseInt(stockInfo.now_price) +
-            parseInt(stockInfo.high_price) +
-            parseInt(stockInfo.low_price) +
-            parseInt(stockInfo.start_price)
+            parseFloat(stockInfo.now_price) +
+            parseFloat(stockInfo.high_price) +
+            parseFloat(stockInfo.low_price) +
+            parseFloat(stockInfo.start_price)
           ) / 4).toFixed(2)}
         </Text>
       </View>
