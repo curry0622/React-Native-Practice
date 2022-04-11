@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Text, SafeAreaView, View, ScrollView  } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { StyleSheet, Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { ListItem, Button } from 'react-native-elements';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import UserContext from '../../contexts/userContext';
 
@@ -10,38 +10,32 @@ const SettingScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} >
       <View style={styles.listItemsContainer}>
-        <ListItem
-          containerStyle={styles.listItem}
-          bottomDivider
-          onPress={() => navigation.push('Profile')}
-        >
-          <Ionicons name="person-circle-sharp" size={36} color="#00bbf0" />
-          <ListItem.Content>
-            <ListItem.Title>{name === '' ? 'Profile' : name}</ListItem.Title>
-          </ListItem.Content>
-          <ListItem.Chevron />
-        </ListItem>
-        <ListItem
-          containerStyle={styles.listItem}
-          bottomDivider
-        >
-          <Ionicons name="stats-chart" size={36} color="#00bbf0" />
-          <ListItem.Content>
-            <ListItem.Title>Favorite Stocks</ListItem.Title>
-          </ListItem.Content>
-          <ListItem.Chevron />
-        </ListItem>
-        <ListItem
-          containerStyle={styles.listItem}
-          bottomDivider
-        >
-          <Ionicons name="logo-bitcoin" size={36} color="#00bbf0" />
-          <ListItem.Content>
-            <ListItem.Title>Favorite Crypto</ListItem.Title>
-          </ListItem.Content>
-          <ListItem.Chevron />
-        </ListItem>
+        <Ionicons name="person-circle-sharp" size={72} color={`${name === '' ? '#707070' : '#00bbf0'}`} />
+        <Text style={{ fontSize: 24, color: '#707070' }}>{name === '' ? '尚未登入' : name}</Text>
       </View>
+      <Button
+        title="登入"
+        raised
+        containerStyle={{
+          marginHorizontal: 120,
+          marginVertical: 20,
+        }}
+        buttonStyle={{
+          backgroundColor: '#00bbf0'
+        }}
+        onPress={() => navigation.push('Login')}
+      />
+      <Button
+        title="註冊"
+        raised
+        containerStyle={{
+          marginHorizontal: 120,
+        }}
+        buttonStyle={{
+          backgroundColor: '#00bbf0'
+        }}
+        onPress={() => navigation.push('Signup')}
+      />
     </ScrollView >
   )
 };
@@ -54,7 +48,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   listItemsContainer: {
+    paddingTop: 30,
     width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   listItem: {
     height: 72,
