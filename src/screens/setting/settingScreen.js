@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Text, SafeAreaView, View, ScrollView  } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
+import UserContext from '../../contexts/userContext';
 
 const SettingScreen = ({ navigation }) => {
+  const { name, setName } = useContext(UserContext);
+
   return (
     <ScrollView style={styles.container} >
       <View style={styles.listItemsContainer}>
@@ -14,7 +17,7 @@ const SettingScreen = ({ navigation }) => {
         >
           <Ionicons name="person-circle-sharp" size={36} color="#00bbf0" />
           <ListItem.Content>
-            <ListItem.Title>Profile</ListItem.Title>
+            <ListItem.Title>{name === '' ? 'Profile' : name}</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
