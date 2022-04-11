@@ -7,13 +7,14 @@ import getFavStocks from '../../apis/getFavStocks';
 import getRcmdStocks from '../../apis/getRcmdStocks';
 import getRcmdCryptos from '../../apis/getRcmdCryptos';
 import getStockInfo from '../../apis/getStockInfo';
+import getFavCryptos from '../../apis/getFavCryptos';
 
 const HomeScreen = ({ navigation }) => {
   const { name, setName } = useContext(UserContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [favStocks, setFavStocks] = useState(null);
-  const [favCryptos, setCryptos] = useState(null);
+  const [favCryptos, setFavCryptos] = useState(null);
   const [rcmdStocks, setRcmdStocks] = useState([]);
   const [rcmdCryptos, setRcmdCryptos] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -26,14 +27,26 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+  const refreshFavCryptos = async () => {
+    const tmp = await getFavCryptos(name);
+    if (tmp) {
+      setFavCryptos([...tmp]);
+    }
+  };
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await refreshFavStocks();
+    await refreshFavCryptos();
     setRefreshing(false)
   }, [name]);
 
   const onPressStock = (stock) => {
     navigation.navigate('Stock', { ...stock, refreshFavStocks });
+  };
+
+  const onPressCrypto = (crypto) => {
+    navigation.navigate('Crypto', { ...crypto, refreshFavCryptos });
   };
 
   const onSearch = async (type) => {
@@ -103,12 +116,9 @@ const HomeScreen = ({ navigation }) => {
     <View style={{ ...styles.listItem, height: 'auto' }}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
-        // onPress={() => onPressStock(crypto.symbol)}
+        onPress={() => onPressCrypto(crypto)}
         underlayColor="#ddd"
       >
-        {/* <View style={{ width: 36, height: 36, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <FontAwesome5 name={crypto.name} size={32} color="black" />
-        </View> */}
         <ListItem.Content>
           <ListItem.Title style={styles.title}>{`${crypto.name}  $${crypto.now_price}`}</ListItem.Title>
           <ListItem.Subtitle style={styles.subtitle}>
@@ -149,12 +159,9 @@ const HomeScreen = ({ navigation }) => {
     <View style={{ ...styles.listItem, height: 'auto' }}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
-        // onPress={() => onPressStock(crypto.symbol)}
+        onPress={() => onPressCrypto(crypto)}
         underlayColor="#ddd"
       >
-        {/* <View style={{ width: 36, height: 36, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <FontAwesome5 name={crypto.name} size={32} color="black" />
-        </View> */}
         <ListItem.Content>
           <ListItem.Title style={styles.title}>{`${crypto.name}  $${crypto.now_price}`}</ListItem.Title>
           <ListItem.Subtitle style={styles.subtitle}>
