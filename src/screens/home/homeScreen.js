@@ -18,7 +18,7 @@ const HomeScreen = ({ navigation }) => {
     const tmp = await getFavStocks(name);
     if (tmp) {
       setFavStocks([...tmp]);
-      console.log(tmp)
+      // console.log(tmp)
     }
     setRefreshing(false)
   }, []);
@@ -37,7 +37,7 @@ const HomeScreen = ({ navigation }) => {
     if (tmp) {
       setFavStocks([...tmp]);
       // setFavStocks([...stocks]);
-      console.log(tmp)
+      // console.log(tmp)
     }
   }, []);
 

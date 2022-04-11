@@ -4,8 +4,10 @@ import { Badge, Button, ButtonGroup } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import UserContext from '../../contexts/userContext';
 import getStockInfo from  '../../apis/getStockInfo';
+import getStockHist from '../../apis/getStockHist';
 import getStockPred from  '../../apis/getStockPred';
 import getStockMACD from '../../apis/getStockMACD';
+import getStockMACDOP from '../../apis/getStockMACDOP';
 import getStockKD from '../../apis/getStockKD';
 import getStockRSI from '../../apis/getStockRSI';
 import getStockBOOL from '../../apis/getStockBOOL';
@@ -28,7 +30,7 @@ const StockScreen = ({ route }) => {
   const [stockInfo, setStockInfo] = useState(route.params);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scale, setScale] = useState(true)
-  const [fav, setFav] = useState(false)
+  const [fav, setFav] = useState(true)
   const [loading, setLoading] = useState(false)
   const [imgLink, setImgLink] = useState('')
   const [refreshing, setRefreshing] = useState(false);
@@ -48,24 +50,36 @@ const StockScreen = ({ route }) => {
     let tmp;
     switch (selectedIndex) {
       case 0:
-        tmp = await getStockMACD(stockInfo.number);
+        tmp = await getStockHist(stockInfo.number);
         if (tmp) {
           setImgLink(tmp);
         }
         break;
       case 1:
-        tmp = await getStockKD(stockInfo.number);
+        tmp = await getStockMACD(stockInfo.number);
         if (tmp) {
           setImgLink(tmp);
         }
         break;
       case 2:
-        tmp = await getStockRSI(stockInfo.number);
+        tmp = await getStockKD(stockInfo.number);
         if (tmp) {
           setImgLink(tmp);
         }
         break;
       case 3:
+        tmp = await getStockMACDOP(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
+      case 4:
+        tmp = await getStockRSI(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
+      case 5:
         tmp = await getStockBOOL(stockInfo.number);
         if (tmp) {
           setImgLink(tmp);
@@ -156,14 +170,18 @@ const StockScreen = ({ route }) => {
           明日股價預測：${parseInt(pred).toFixed(2)}
         </Text>
       </View>
-      <View style={{ paddingHorizontal: 20 }}>
-        <View style={{ width: '100%', height: 1, borderWidth: 0.5, borderColor: '#ddd', marginTop: 15 }} />
-      </View>
       <View style={styles.selector}>
         <ButtonGroup
-          buttons={['MACD', 'KD', 'RSI', '布林通道']}
+          buttons={['歷史價位', 'MACD', 'KD策略']}
           selectedIndex={selectedIndex}
           onPress={(value) => setSelectedIndex(value)}
+          containerStyle={styles.btnGrpContainer}
+          selectedButtonStyle={styles.selectedBtn}
+        />
+        <ButtonGroup
+          buttons={['MACD策略', 'RSI', '布林通道']}
+          selectedIndex={selectedIndex - 3}
+          onPress={(value) => setSelectedIndex(value + 3)}
           containerStyle={styles.btnGrpContainer}
           selectedButtonStyle={styles.selectedBtn}
         />
@@ -262,10 +280,12 @@ const styles = StyleSheet.create({
     height: 400,
     position: 'relative',
     paddingHorizontal: 20,
+    marginBottom: 40,
   },
   chartScroll: {
     borderWidth: 1,
     borderColor: '#ddd',
+    // borderRadius: 5,
     width: '100%',
     height: '100%',
   },
@@ -282,8 +302,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 70,
     paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   btnGrpContainer: {
     borderWidth: 1,
