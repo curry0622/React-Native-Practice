@@ -62,49 +62,49 @@ const StockScreen = ({ route }) => {
     }
   };
 
-  // useEffect(async () => {
-  //   setLoading(true);
-  //   let tmp;
-  //   switch (selectedIndex) {
-  //     case 0:
-  //       tmp = await getStockHist(stockInfo.number);
-  //       if (tmp) {
-  //         setImgLink(tmp);
-  //       }
-  //       break;
-  //     case 1:
-  //       tmp = await getStockMACD(stockInfo.number);
-  //       if (tmp) {
-  //         setImgLink(tmp);
-  //       }
-  //       break;
-  //     case 2:
-  //       tmp = await getStockKD(stockInfo.number);
-  //       if (tmp) {
-  //         setImgLink(tmp);
-  //       }
-  //       break;
-  //     case 3:
-  //       tmp = await getStockMACDOP(stockInfo.number);
-  //       if (tmp) {
-  //         setImgLink(tmp);
-  //       }
-  //       break;
-  //     case 4:
-  //       tmp = await getStockRSI(stockInfo.number);
-  //       if (tmp) {
-  //         setImgLink(tmp);
-  //       }
-  //       break;
-  //     case 5:
-  //       tmp = await getStockBOOL(stockInfo.number);
-  //       if (tmp) {
-  //         setImgLink(tmp);
-  //       }
-  //       break;
-  //   }
-  //   setLoading(false);
-  // }, [selectedIndex]);
+  useEffect(async () => {
+    setLoading(true);
+    let tmp;
+    switch (selectedIndex) {
+      case 0:
+        tmp = await getStockHist(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
+      case 1:
+        tmp = await getStockMACD(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
+      case 2:
+        tmp = await getStockKD(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
+      case 3:
+        tmp = await getStockMACDOP(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
+      case 4:
+        tmp = await getStockRSI(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
+      case 5:
+        tmp = await getStockBOOL(stockInfo.number);
+        if (tmp) {
+          setImgLink(tmp);
+        }
+        break;
+    }
+    setLoading(false);
+  }, [selectedIndex]);
 
   useEffect(async () => {
     const tmp = await getStockPred(stockInfo.number);
@@ -132,7 +132,7 @@ const StockScreen = ({ route }) => {
     >
       <View style={styles.headerContainer}>
         <View style={styles.headerRightContainer}>
-          <Text style={styles.price}>${parseInt(stockInfo.now_price).toFixed(2)}</Text>
+          <Text style={styles.price}>${stockInfo.now_price}</Text>
           <View style={styles.badgesContainer}>
             <Badge
               containerStyle={{ marginRight: 5 }}
@@ -172,12 +172,17 @@ const StockScreen = ({ route }) => {
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.todayInfoContainer}>
-          <Text style={{ fontSize: 16 }}>開：${parseInt(stockInfo.start_price).toFixed(2)}</Text>
-          <Text style={{ fontSize: 16 }}>高：${parseInt(stockInfo.high_price).toFixed(2)}</Text>
-          <Text style={{ fontSize: 16 }}>低：${parseInt(stockInfo.low_price).toFixed(2)}</Text>
+          <Text style={{ fontSize: 16 }}>開：${stockInfo.start_price}</Text>
+          <Text style={{ fontSize: 16 }}>高：${stockInfo.high_price}</Text>
+          <Text style={{ fontSize: 16 }}>低：${stockInfo.low_price}</Text>
         </View>
         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-          明日股價預測：${parseInt(pred).toFixed(2)}
+          明日股價預測：${pred || ((
+            parseInt(stockInfo.now_price) +
+            parseInt(stockInfo.high_price) +
+            parseInt(stockInfo.low_price) +
+            parseInt(stockInfo.start_price)
+          ) / 4).toFixed(2)}
         </Text>
       </View>
       <View style={styles.selector}>

@@ -2,9 +2,9 @@ import axios from './axios';
 
 const getFavStocks = async () => {
   try {
-    const response = await axios.get(
-      '/recommend',
-    );
+    console.log('/recommend', 'pending');
+    const response = await axios.get('/recommend');
+    console.log('/recommend', 'fulfilled');
     return response.data;
   } catch (e) {
     alert('/recommend', e);
