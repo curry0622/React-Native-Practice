@@ -23,21 +23,21 @@ export default function App() {
             component={HomeStack}
             options={{ tabBarIcon: ({ focused }) => <Foundation name="home" size={26} color={focused ? '#00bbf0' : '#707070'} /> }}
           />
-          <Tab.Screen
+          {/* <Tab.Screen
             name="List"
             component={ListStack}
             options={{ tabBarIcon: ({ focused }) => <Foundation name="list" size={26} color={focused ? '#00bbf0' : '#707070'} /> }}
-          />
+          /> */}
           {/* <Tab.Screen name="Scan" component={ScanStack} options={{ tabBarIcon: ({ focused }) => <Ionicons name="scan-circle" size={30} color={focused ? '#00bbf0' : '#707070'} /> }} /> */}
-          <Tab.Screen
+          {/* <Tab.Screen
             name="Notify"
             component={NotifyStack}
             options={{ tabBarIcon: ({ focused }) => <Ionicons name="notifications" size={24} color={focused ? '#00bbf0' : '#707070'} /> }}
-          />
+          /> */}
           <Tab.Screen
             name="Setting"
             component={SettingStack}
-            options={{ tabBarIcon: ({ focused }) => <Ionicons name="settings-sharp" size={24} color={focused ? '#00bbf0' : '#707070'} /> }}
+            options={{ tabBarIcon: ({ focused }) => <Ionicons name="person" size={24} color={focused ? '#00bbf0' : '#707070'} /> }}
           />
         </Tab.Navigator>
       </NavigationContainer>

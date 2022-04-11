@@ -32,7 +32,8 @@ const StockScreen = ({ route }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scale, setScale] = useState(true)
   const [fav, setFav] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [chartLoading, setChartLoading] = useState(false)
+  const [favLoading, setFavLoading] = useState(false);
   const [imgLink, setImgLink] = useState('')
   const [refreshing, setRefreshing] = useState(false);
   const [pred, setPred] = useState('');
@@ -60,10 +61,11 @@ const StockScreen = ({ route }) => {
         setFav(false);
       }
     }
+    await route.params.refreshFavStocks();
   };
 
   useEffect(async () => {
-    setLoading(true);
+    setChartLoading(true);
     let tmp;
     switch (selectedIndex) {
       case 0:
@@ -103,7 +105,7 @@ const StockScreen = ({ route }) => {
         }
         break;
     }
-    setLoading(false);
+    setChartLoading(false);
   }, [selectedIndex]);
 
   useEffect(async () => {
@@ -114,10 +116,12 @@ const StockScreen = ({ route }) => {
   }, [stockInfo]);
 
   useEffect(async () => {
+    setFavLoading(true);
     const tmp = await getFavStocks(name);
     if (tmp) {
       setFav(tmp.filter(e => e.number === stockInfo.number).length > 0)
     }
+    setFavLoading(false);
   }, [name]);
 
   return (
@@ -155,16 +159,23 @@ const StockScreen = ({ route }) => {
         </View>
         <Button
           type="solid"
-          icon={{
+          disabled={favLoading}
+          icon={!favLoading ? {
             name: `${fav ? 'bookmark' : 'bookmark-o'}`,
             type: 'font-awesome',
             size: 20,
             color: '#f50',
-          }}
+          } : <ActivityIndicator />}
           buttonStyle={{
             backgroundColor: '#fff',
             borderWidth: 1,
             borderColor: '#ddd',
+            borderRadius: 5,
+          }}
+          disabledStyle={{
+            backgroundColor: '#fff',
+            borderWidth: 1,
+            borderColor: '#f1f2f1',
             borderRadius: 5,
           }}
           onPress={() => onPressAdd()}
@@ -203,7 +214,7 @@ const StockScreen = ({ route }) => {
       </View>
       <View style={styles.chartContainer}>
         {scale ? (
-          loading ? (
+          chartLoading ? (
             <ActivityIndicator size="large"/>
           ) : (
             <ScrollView style={styles.chartScroll} horizontal>
@@ -216,7 +227,7 @@ const StockScreen = ({ route }) => {
             </ScrollView>
           )
         ) : (
-          loading ? (
+          chartLoading ? (
             <ActivityIndicator size="large"/>
           ) : (
             <View style={styles.chartScroll}>

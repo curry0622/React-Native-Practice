@@ -17,18 +17,21 @@ const HomeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [searchVal, setSearchVal] = useState(0);
 
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
+  const refreshFavStocks = async () => {
     const tmp = await getFavStocks(name);
     if (tmp) {
       setFavStocks([...tmp]);
     }
+  };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refreshFavStocks();
     setRefreshing(false)
   }, [name]);
 
   const onPressStock = (stock) => {
-    // if (stock.number !== '0000')
-    navigation.navigate('Stock', { ...stock });
+    navigation.navigate('Stock', { ...stock, refreshFavStocks });
   };
 
   const onSearch = async (type) => {
@@ -37,7 +40,7 @@ const HomeScreen = ({ navigation }) => {
       const tmp = await getStockInfo(searchVal);
       if (tmp) {
         setLoading(false)
-        navigation.navigate('Stock', { ...tmp });
+        navigation.navigate('Stock', { ...tmp, refreshFavStocks });
       }
       setSearchVal('')
     }
