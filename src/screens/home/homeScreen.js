@@ -146,7 +146,7 @@ const HomeScreen = ({ navigation }) => {
           </ListItem.Subtitle>
         </ListItem.Content>
         <Badge value={crypto.price_increase_rate} status={crypto.price_increase[0] === '+' ? 'error' : 'success'} />
-        <ListItem.Chevron />
+        <ListItem.Chevron color="#707070" />
       </ListItem>
     </View>
   ));
@@ -189,7 +189,7 @@ const HomeScreen = ({ navigation }) => {
           </ListItem.Subtitle>
         </ListItem.Content>
         <Badge value={crypto.price_increase_rate} status={crypto.price_increase[0] === '+' ? 'error' : 'success'} />
-        <ListItem.Chevron />
+        <ListItem.Chevron color="#707070" />
       </ListItem>
     </View>
   ));
