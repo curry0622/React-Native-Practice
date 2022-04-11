@@ -1,17 +1,19 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
-import { StyleSheet, View, ScrollView, RefreshControl  } from 'react-native';
+import { StyleSheet, View, ScrollView, RefreshControl, Text } from 'react-native';
 import { ListItem, Badge, ButtonGroup } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
 import stocks from './stocks.json';
 import cryptos from './cryptos.json';
 import UserContext from '../../contexts/userContext';
 import getFavStocks from '../../apis/getFavStocks';
+import getRcmdStocks from '../../apis/getRcmdStocks';
 
 const HomeScreen = ({ navigation }) => {
   const { name, setName } = useContext(UserContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [favStocks, setFavStocks] = useState([]);
+  const [rcmdStocks, setRcmdStocks] = useState([]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -33,15 +35,19 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(async () => {
-    const tmp = await getFavStocks(name);
+    let tmp = await getFavStocks(name);
     if (tmp) {
       setFavStocks([...tmp]);
       // setFavStocks([...stocks]);
       // console.log(tmp)
     }
+    tmp = await getRcmdStocks();
+    if (tmp) {
+      setRcmdStocks([...tmp]);
+    }
   }, []);
 
-  const createStockBars = favStocks.map((stock) => (
+  const createFavStockBars = favStocks.map((stock) => (
     <View style={styles.listItem}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
@@ -84,6 +90,30 @@ const HomeScreen = ({ navigation }) => {
     </View>
   ));
 
+  const createRcmdStockBars = rcmdStocks.map((stock) => (
+    <View style={styles.listItem}>
+      <ListItem
+        containerStyle={{ borderRadius: 5 }}
+        onPress={() => onPressStock(stock)}
+        underlayColor="#ddd"
+      >
+        <ListItem.Content>
+          <ListItem.Title style={styles.title}>
+            {`[${stock.number}]  ${stock.name}  $${parseInt(stock.now_price).toFixed(2)}`}
+          </ListItem.Title>
+          <ListItem.Subtitle style={styles.subtitle}>
+            {`開${stock.start_price}  高${stock.high_price}  低${stock.low_price}`}
+          </ListItem.Subtitle>
+        </ListItem.Content>
+        <Badge
+          value={getPercentageText(stock.price_increase, stock.now_price)}
+          status={stock.price_increase > 0 ? 'error' : 'success'}
+        />
+        <ListItem.Chevron />
+      </ListItem>
+    </View>
+  ));
+
   return (
     <ScrollView
       style={styles.container}
@@ -102,7 +132,10 @@ const HomeScreen = ({ navigation }) => {
           containerStyle={styles.btnGrpContainer}
           selectedButtonStyle={styles.selectedBtn}
         />
-        {selectedIndex === 0 ? createStockBars : createCryptoBars}
+        <Text style={{ marginBottom: 15 }}>[ 我的最愛 ]</Text>
+        {selectedIndex === 0 ? createFavStockBars : createCryptoBars}
+        {selectedIndex === 0 && <Text style={{ marginBottom: 15 }}>[ 推薦台股 ]</Text>}
+        {selectedIndex === 0 && createRcmdStockBars}
       </View>
     </ScrollView >
   )
