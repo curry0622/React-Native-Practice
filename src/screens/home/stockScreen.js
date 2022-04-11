@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import { Badge, Button, ButtonGroup } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
+import UserContext from '../../contexts/userContext';
 import getStockInfo from  '../../apis/getStockInfo';
 import getStockPred from  '../../apis/getStockPred';
 import getStockMACD from '../../apis/getStockMACD';
 import getStockKD from '../../apis/getStockKD';
 import getStockRSI from '../../apis/getStockRSI';
 import getStockBOOL from '../../apis/getStockBOOL';
+import addFavStock from '../../apis/addFavStock';
+import delFavStock from '../../apis/delFavStock';
 
 const getPercentageText = (priceIncrease, startPrice) => {
   const percentage = (priceIncrease / startPrice) * 100;
@@ -21,6 +24,7 @@ const getIncreaseText = (priceIncrease) => {
 const blankImg = 'https://imgur.com/KNsnWx0.png'
 
 const StockScreen = ({ route }) => {
+  const { name, setName } = useContext(UserContext);
   const [stockInfo, setStockInfo] = useState(route.params);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scale, setScale] = useState(true)
@@ -77,6 +81,20 @@ const StockScreen = ({ route }) => {
       setPred(tmp[0]);
     }
   }, [stockInfo]);
+
+  useEffect(async () => {
+    if (fav) {
+      const tmp = await addFavStock({ name, stockNum: stockInfo.number });
+      if (tmp) {
+        console.log('/add_fav_stock', tmp)
+      }
+    } else {
+      const tmp = await delFavStock({ name, stockNum: stockInfo.number });
+      if (tmp) {
+        console.log('/del_fav_stock', tmp);
+      }
+    }
+  }, [fav]);
 
   return (
     <ScrollView

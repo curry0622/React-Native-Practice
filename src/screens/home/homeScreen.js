@@ -1,17 +1,26 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { StyleSheet, View, ScrollView, RefreshControl  } from 'react-native';
 import { ListItem, Badge, ButtonGroup } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
 import stocks from './stocks.json';
 import cryptos from './cryptos.json';
+import UserContext from '../../contexts/userContext';
+import getFavStocks from '../../apis/getFavStocks';
 
 const HomeScreen = ({ navigation }) => {
+  const { name, setName } = useContext(UserContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [favStocks, setFavStocks] = useState([]);
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 1200)
+    const tmp = await getFavStocks(name);
+    if (tmp) {
+      setFavStocks([...tmp]);
+      console.log(tmp)
+    }
+    setRefreshing(false)
   }, []);
 
   const onPressStock = (stock) => {
@@ -23,7 +32,16 @@ const HomeScreen = ({ navigation }) => {
     return `${percentage > 0 ? '+' : ''}${percentage.toFixed(2)}%`;
   };
 
-  const createStockBars = stocks.map((stock) => (
+  useEffect(async () => {
+    const tmp = await getFavStocks(name);
+    if (tmp) {
+      setFavStocks([...tmp]);
+      // setFavStocks([...stocks]);
+      console.log(tmp)
+    }
+  }, []);
+
+  const createStockBars = favStocks.map((stock) => (
     <View style={styles.listItem}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
@@ -31,10 +49,17 @@ const HomeScreen = ({ navigation }) => {
         underlayColor="#ddd"
       >
         <ListItem.Content>
-          <ListItem.Title style={styles.title}>{`[${stock.number}]  ${stock.name}  $${stock.now_price.toFixed(2)}`}</ListItem.Title>
-          <ListItem.Subtitle style={styles.subtitle}>{`開${stock.start_price}  高${stock.high_price}  低${stock.low_price}`}</ListItem.Subtitle>
+          <ListItem.Title style={styles.title}>
+            {`[${stock.number}]  ${stock.name}  $${parseInt(stock.now_price).toFixed(2)}`}
+          </ListItem.Title>
+          <ListItem.Subtitle style={styles.subtitle}>
+            {`開${stock.start_price}  高${stock.high_price}  低${stock.low_price}`}
+          </ListItem.Subtitle>
         </ListItem.Content>
-        <Badge value={getPercentageText(stock.price_increase, stock.now_price)} status={stock.price_increase > 0 ? 'error' : 'success'} />
+        <Badge
+          value={getPercentageText(stock.price_increase, stock.now_price)}
+          status={stock.price_increase > 0 ? 'error' : 'success'}
+        />
         <ListItem.Chevron />
       </ListItem>
     </View>
