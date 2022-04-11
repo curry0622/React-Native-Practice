@@ -2,10 +2,10 @@ import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator } from 'react-native';
 import { ListItem, Badge, ButtonGroup, Input, Button } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
-import cryptos from './cryptos.json';
 import UserContext from '../../contexts/userContext';
 import getFavStocks from '../../apis/getFavStocks';
 import getRcmdStocks from '../../apis/getRcmdStocks';
+import getRcmdCryptos from '../../apis/getRcmdCryptos';
 import getStockInfo from '../../apis/getStockInfo';
 
 const HomeScreen = ({ navigation }) => {
@@ -13,7 +13,9 @@ const HomeScreen = ({ navigation }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [favStocks, setFavStocks] = useState(null);
+  const [favCryptos, setCryptos] = useState(null);
   const [rcmdStocks, setRcmdStocks] = useState([]);
+  const [rcmdCryptos, setRcmdCryptos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchVal, setSearchVal] = useState(0);
 
@@ -53,7 +55,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(async () => {
-    setLoading(true);
+    // setLoading(true);
     let tmp = await getFavStocks(name);
     if (tmp) {
       setFavStocks([...tmp]);
@@ -61,6 +63,10 @@ const HomeScreen = ({ navigation }) => {
     tmp = await getRcmdStocks();
     if (tmp) {
       setRcmdStocks([...tmp]);
+    }
+    tmp = await getRcmdCryptos();
+    if (tmp) {
+      setRcmdCryptos([...tmp]);
     }
     setLoading(false);
   }, [name]);
@@ -93,20 +99,23 @@ const HomeScreen = ({ navigation }) => {
     </View>
   ));
 
-  const createCryptoBars = cryptos.map((crypto) => (
+  const createFavCryptoBars = [...new Set(favCryptos)].map((crypto) => (
     <View style={{ ...styles.listItem, height: 'auto' }}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
         // onPress={() => onPressStock(crypto.symbol)}
         underlayColor="#ddd"
       >
-        <View style={{ width: 36, height: 36, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        {/* <View style={{ width: 36, height: 36, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <FontAwesome5 name={crypto.name} size={32} color="black" />
-        </View>
+        </View> */}
         <ListItem.Content>
-          <ListItem.Title style={{ fontSize: 18 }}>{`${crypto.symbol}  $${crypto.price}`}</ListItem.Title>
+          <ListItem.Title style={styles.title}>{`${crypto.name}  $${crypto.now_price}`}</ListItem.Title>
+          <ListItem.Subtitle style={styles.subtitle}>
+            {`高${crypto.high_price}  低${crypto.low_price}`}
+          </ListItem.Subtitle>
         </ListItem.Content>
-        <Badge value={crypto.percentage} status={crypto.up ? 'error' : 'success'} />
+        <Badge value={crypto.price_increase_rate} status={crypto.price_increase[0] === '+' ? 'error' : 'success'} />
         <ListItem.Chevron />
       </ListItem>
     </View>
@@ -132,6 +141,28 @@ const HomeScreen = ({ navigation }) => {
           status={stock.price_increase > 0 ? 'error' : 'success'}
         />
         <ListItem.Chevron color="#707070" />
+      </ListItem>
+    </View>
+  ));
+
+  const createRcmdCryptoBars = rcmdCryptos.map((crypto) => (
+    <View style={{ ...styles.listItem, height: 'auto' }}>
+      <ListItem
+        containerStyle={{ borderRadius: 5 }}
+        // onPress={() => onPressStock(crypto.symbol)}
+        underlayColor="#ddd"
+      >
+        {/* <View style={{ width: 36, height: 36, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <FontAwesome5 name={crypto.name} size={32} color="black" />
+        </View> */}
+        <ListItem.Content>
+          <ListItem.Title style={styles.title}>{`${crypto.name}  $${crypto.now_price}`}</ListItem.Title>
+          <ListItem.Subtitle style={styles.subtitle}>
+            {`高${crypto.high_price}  低${crypto.low_price}`}
+          </ListItem.Subtitle>
+        </ListItem.Content>
+        <Badge value={crypto.price_increase_rate} status={crypto.price_increase[0] === '+' ? 'error' : 'success'} />
+        <ListItem.Chevron />
       </ListItem>
     </View>
   ));
@@ -172,13 +203,13 @@ const HomeScreen = ({ navigation }) => {
             onSubmitEditing={() => onSearch('stock')}
           />
           <Text style={{ marginBottom: !favStocks ? 0 : 15 }}>[ 我的最愛 ]</Text>
-          {!favStocks
+          {
+            !favStocks && !favCryptos
             ? <View style={styles.loginHint}><Text style={{ color: '#707070' }}>- 尚未登入 -</Text></View>
-            : (
-              selectedIndex === 0 ? createFavStockBars : createCryptoBars
-          )}
-          {selectedIndex === 0 && <Text style={{ marginBottom: 15 }}>[ 推薦台股 ]</Text>}
-          {selectedIndex === 0 && createRcmdStockBars}
+            : (selectedIndex === 0 ? createFavStockBars : createFavCryptoBars)
+          }
+          <Text style={{ marginBottom: 15 }}>[ 推薦{`${selectedIndex === 0 ? '台股' : '幣種'}`} ]</Text>
+          {selectedIndex === 0 ? createRcmdStockBars : createRcmdCryptoBars}
         </View>
       )}
     </ScrollView >

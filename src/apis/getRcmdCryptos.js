@@ -1,6 +1,6 @@
 import axios from './axios';
 
-const getFavStocks = async () => {
+const getRcmdCryptos = async () => {
   try {
     console.log('/recommend_coin', 'pending');
     const response = await axios.get('/recommend_coin');
@@ -12,4 +12,4 @@ const getFavStocks = async () => {
   }
 };
 
-export default getFavStocks;
+export default getRcmdCryptos;
