@@ -1,83 +1,92 @@
 [
   {
+    "name": "東鹼",
+    "now_price": 573.00,
+    "start_price": 578.00,
+    "high_price": 582.00,
+    "low_price": 575.00,
+    "number": 1708,
+    "price_increase": -5
+  },
+  {
+    "name": "聯華電子",
+    "now_price": 971.00,
+    "start_price": 951.00,
+    "high_price": 978.00,
+    "low_price": 949.00,
+    "number": 2303,
+    "price_increase": 20
+  },
+  {
     "name": "台積電",
-    "price": 579.00,
-    "open": 578.00,
-    "high": 582.00,
-    "low": 575.00,
-    "percentage": "-1.56%",
-    "up": false
+    "now_price": 52.60,
+    "start_price": 52.40,
+    "high_price": 52.80,
+    "low_price": 52.20,
+    "number": 2330,
+    "price_increase": 0.2
   },
   {
     "name": "聯發科",
-    "price": 971.00,
-    "open": 951.00,
-    "high": 978.00,
-    "low": 949.00,
-    "percentage": "+5.69%",
-    "up": true
+    "now_price": 104.00,
+    "start_price": 103.50,
+    "high_price": 104.50,
+    "low_price": 103.00,
+    "number": 2454,
+    "price_increase": 0.5
   },
   {
-    "name": "聯電",
-    "price": 52.60,
-    "open": 52.40,
-    "high": 52.80,
-    "low": 52.20,
-    "percentage": "+3.54%",
-    "up": true
+    "name": "長榮海運",
+    "now_price": 38.85,
+    "start_price": 38.90,
+    "high_price": 38.90,
+    "low_price": 38.55,
+    "number": 2603,
+    "price_increase": -0.05
   },
   {
-    "name": "鴻海",
-    "price": 104.00,
-    "open": 103.50,
-    "high": 104.50,
-    "low": 103.00,
-    "percentage": "+2.46%",
-    "up": true
+    "name": "陽明海運",
+    "now_price": 579.00,
+    "start_price": 578.00,
+    "high_price": 582.00,
+    "low_price": 575.00,
+    "number": 2609,
+    "price_increase": 1
   },
   {
-    "name": "中鋼",
-    "price": 38.85,
-    "open": 38.90,
-    "high": 38.90,
-    "low": 38.55,
-    "percentage": "+0.78%",
-    "up": true
+    "name": "長榮航",
+    "now_price": 579.00,
+    "start_price": 578.00,
+    "high_price": 582.00,
+    "low_price": 575.00,
+    "number": 2618,
+    "price_increase": 1
   },
   {
-    "name": "台積電",
-    "price": 579.00,
-    "open": 578.00,
-    "high": 582.00,
-    "low": 575.00,
-    "percentage": "-1.56%",
-    "up": false
+    "name": "智原科技",
+    "now_price": 579.00,
+    "start_price": 578.00,
+    "high_price": 582.00,
+    "low_price": 575.00,
+    "number": 3035,
+    "price_increase": 1
   },
   {
-    "name": "台積電",
-    "price": 579.00,
-    "open": 578.00,
-    "high": 582.00,
-    "low": 575.00,
-    "percentage": "-1.56%",
-    "up": false
+    "name": "欣興電子",
+    "now_price": 579.00,
+    "start_price": 578.00,
+    "high_price": 582.00,
+    "low_price": 575.00,
+    "number": 3037,
+    "price_increase": 1
   },
   {
-    "name": "台積電",
-    "price": 579.00,
-    "open": 578.00,
-    "high": 582.00,
-    "low": 575.00,
-    "percentage": "-1.56%",
-    "up": false
-  },
-  {
-    "name": "台積電",
-    "price": 579.00,
-    "open": 578.00,
-    "high": 582.00,
-    "low": 575.00,
-    "percentage": "-1.56%",
-    "up": false
+    "name": "新唐科技",
+    "now_price": 579.00,
+    "start_price": 578.00,
+    "high_price": 582.00,
+    "low_price": 575.00,
+    "number": 4919,
+    "price_increase": 1
   }
 ]

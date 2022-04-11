@@ -3,32 +3,23 @@ import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator, RefreshCo
 import { Badge, Button, ButtonGroup } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import UserContext from '../../contexts/userContext';
-import getFavStocks from '../../apis/getFavStocks';
-import getStockInfo from  '../../apis/getStockInfo';
-import getStockHist from '../../apis/getStockHist';
-import getStockPred from  '../../apis/getStockPred';
-import getStockMACD from '../../apis/getStockMACD';
-import getStockMACDOP from '../../apis/getStockMACDOP';
-import getStockKD from '../../apis/getStockKD';
-import getStockRSI from '../../apis/getStockRSI';
-import getStockBOOL from '../../apis/getStockBOOL';
-import addFavStock from '../../apis/addFavStock';
-import delFavStock from '../../apis/delFavStock';
-
-const getPercentageText = (priceIncrease, startPrice) => {
-  const percentage = (priceIncrease / startPrice) * 100;
-  return `${percentage > 0 ? '+' : ''}${percentage.toFixed(2)}%`;
-};
-
-const getIncreaseText = (priceIncrease) => {
-  return `${priceIncrease > 0 ? '↑' : '↓'} ${Math.abs(priceIncrease).toFixed(2)}`;
-};
+import getFavCryptos from '../../apis/getFavCryptos';
+import getCryptoInfo from  '../../apis/getCryptoInfo';
+import getCryptoHist from '../../apis/getCryptoHist';
+import getCryptoPred from  '../../apis/getCryptoPred';
+import getCryptoMACD from '../../apis/getCryptoMACD';
+import getCryptoMACDOP from '../../apis/getCryptoMACDOP';
+import getCryptoKD from '../../apis/getCryptoKD';
+import getCryptoRSI from '../../apis/getCryptoRSI';
+import getCryptoBOOL from '../../apis/getCryptoBOOL';
+import delFavCrypto from '../../apis/delFavCrypto';
+import addFavCrypto from '../../apis/addFavCrypto';
 
 const blankImg = 'https://imgur.com/KNsnWx0.png'
 
-const StockScreen = ({ route }) => {
+const CryptoScreen = ({ route }) => {
   const { name, setName } = useContext(UserContext);
-  const [stockInfo, setStockInfo] = useState(route.params);
+  const [cryptoInfo, setCryptoInfo] = useState(route.params);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scale, setScale] = useState(true)
   const [fav, setFav] = useState(false)
@@ -40,9 +31,9 @@ const StockScreen = ({ route }) => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    const tmp = await getStockInfo(stockInfo.number);
+    const tmp = await getCryptoInfo(cryptoInfo.name);
     if (tmp) {
-      setStockInfo(tmp);
+      setCryptoInfo(tmp);
     }
     setRefreshing(false);
   }, []);
@@ -50,18 +41,18 @@ const StockScreen = ({ route }) => {
   const onPressAdd = async () => {
     if (fav) {
       setFav(false);
-      const tmp = await delFavStock({ name, stockNum: stockInfo.number });
+      const tmp = await delFavCrypto({ name, cryptoName: cryptoInfo.name });
       if (!tmp) {
         setFav(true);
       }
     } else {
       setFav(true);
-      const tmp = await addFavStock({ name, stockNum: stockInfo.number });
+      const tmp = await addFavCrypto({ name, cryptoName: cryptoInfo.name });
       if (!tmp) {
         setFav(false);
       }
     }
-    await route.params.refreshFavStocks();
+    await route.params.refreshFavCryptos();
   };
 
   useEffect(async () => {
@@ -69,37 +60,37 @@ const StockScreen = ({ route }) => {
     let tmp;
     switch (selectedIndex) {
       case 0:
-        tmp = await getStockHist(stockInfo.number);
+        tmp = await getCryptoHist(cryptoInfo.name);
         if (tmp) {
           setImgLink(tmp);
         }
         break;
       case 1:
-        tmp = await getStockMACD(stockInfo.number);
+        tmp = await getCryptoMACD(cryptoInfo.name);
         if (tmp) {
           setImgLink(tmp);
         }
         break;
       case 2:
-        tmp = await getStockKD(stockInfo.number);
+        tmp = await getCryptoKD(cryptoInfo.name);
         if (tmp) {
           setImgLink(tmp);
         }
         break;
       case 3:
-        tmp = await getStockMACDOP(stockInfo.number);
+        tmp = await getCryptoMACDOP(cryptoInfo.name);
         if (tmp) {
           setImgLink(tmp);
         }
         break;
       case 4:
-        tmp = await getStockRSI(stockInfo.number);
+        tmp = await getCryptoRSI(cryptoInfo.name);
         if (tmp) {
           setImgLink(tmp);
         }
         break;
       case 5:
-        tmp = await getStockBOOL(stockInfo.number);
+        tmp = await getCryptoBOOL(cryptoInfo.name);
         if (tmp) {
           setImgLink(tmp);
         }
@@ -109,17 +100,17 @@ const StockScreen = ({ route }) => {
   }, [selectedIndex]);
 
   useEffect(async () => {
-    const tmp = await getStockPred(stockInfo.number);
+    const tmp = await getCryptoPred(cryptoInfo.name);
     if (tmp) {
       setPred(tmp[0]);
     }
-  }, [stockInfo]);
+  }, [cryptoInfo]);
 
   useEffect(async () => {
     setFavLoading(true);
-    const tmp = await getFavStocks(name);
+    const tmp = await getFavCryptos(name);
     if (tmp) {
-      setFav(tmp.filter(e => e.number === stockInfo.number).length > 0)
+      setFav(tmp.filter(e => e.name === cryptoInfo.name).length > 0)
     }
     setFavLoading(false);
   }, [name]);
@@ -136,24 +127,24 @@ const StockScreen = ({ route }) => {
     >
       <View style={styles.headerContainer}>
         <View style={styles.headerRightContainer}>
-          <Text style={styles.price}>${stockInfo.now_price}</Text>
+          <Text style={styles.price}>${cryptoInfo.now_price}</Text>
           <View style={styles.badgesContainer}>
             <Badge
               containerStyle={{ marginRight: 5 }}
-              value={getPercentageText(stockInfo.price_increase, stockInfo.now_price)}
-              status={stockInfo.price_increase > 0 ? 'error' : 'success'}
+              value={cryptoInfo.price_increase_rate}
+              status={cryptoInfo.price_increase[0] === '+' ? 'error' : 'success'}
             />
             <Badge
               badgeStyle={{
                 backgroundColor: '#fff',
                 borderWidth: 1.5,
-                borderColor: stockInfo.price_increase > 0 ? '#f44336' : '#52c41a'
+                borderColor: cryptoInfo.price_increase[0] === '+' ? '#f44336' : '#52c41a'
               }}
               textStyle={{
-                color: stockInfo.price_increase > 0 ? '#f44336' : '#52c41a',
+                color: cryptoInfo.price_increase[0] === '+' ? '#f44336' : '#52c41a',
                 fontWeight: 'bold'
               }}
-              value={getIncreaseText(stockInfo.price_increase)}
+              value={cryptoInfo.price_increase}
             />
           </View>
         </View>
@@ -183,17 +174,15 @@ const StockScreen = ({ route }) => {
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.todayInfoContainer}>
-          <Text style={{ fontSize: 16 }}>開：${stockInfo.start_price}</Text>
-          <Text style={{ fontSize: 16 }}>高：${stockInfo.high_price}</Text>
-          <Text style={{ fontSize: 16 }}>低：${stockInfo.low_price}</Text>
+          <Text style={{ fontSize: 16 }}>高：${cryptoInfo.high_price}</Text>
+          <Text style={{ fontSize: 16 }}>低：${cryptoInfo.low_price}</Text>
         </View>
         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
           明日股價預測：${pred || ((
-            parseFloat(stockInfo.now_price) +
-            parseFloat(stockInfo.high_price) +
-            parseFloat(stockInfo.low_price) +
-            parseFloat(stockInfo.start_price)
-          ) / 4).toFixed(2)}
+            parseFloat(cryptoInfo.now_price) +
+            parseFloat(cryptoInfo.high_price) +
+            parseFloat(cryptoInfo.low_price)
+          ) / 3)}
         </Text>
       </View>
       <View style={styles.selector}>
@@ -256,7 +245,7 @@ const StockScreen = ({ route }) => {
   )
 };
 
-export default StockScreen;
+export default CryptoScreen;
 
 const styles = StyleSheet.create({
   container: {

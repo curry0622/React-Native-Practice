@@ -1,28 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import { Button, Input } from 'react-native-elements';
+import UserContext from '../../contexts/userContext';
+import signup from '../../apis/signup';
 
 const SignupScreen = ({ navigation }) => {
+  const { name, setName } = useContext(UserContext);
   const [showPsw, setShowPsw] = useState(false);
-  const [email, setEmail] = useState('');
   const [psw, setPsw] = useState('');
+  const [tmpName, setTmpName] = useState('');
   const [confirmPsw, setConfirmPsw] = useState('');
 
-  const checkValid = () => {
-    const checkEmail = RegExp(/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i);
-
-    if ((email.length == 0) || (psw.length == 0) || (confirmPsw.length == 0)) {
+  const onClickRegister = async () => {
+    if ((tmpName.length == 0) || (psw.length == 0) || (confirmPsw.length == 0)) {
       alert('Required field is missing');
-    } else if (!(checkEmail).test(email)) {
-      alert('Invalid email');
-    } else if (psw.length < 8) {
-      alert('Password must be at least 8 characters long');
     } else if (((/[ ]/).test(psw))) {
       alert('Don\'t include space in password');
     } else if (psw !== confirmPsw) {
       alert('Password doesn\'t match');
     } else {
-      navigation.popToTop();
+      const tmp = await signup({ name: tmpName, psw });
+      if (tmp) {
+        if (tmp.Successful) {
+          setName(tmpName);
+          alert(`Welcome ${tmpName}`);
+          navigation.popToTop();
+        } else {
+          alert('Sign up failed');
+        }
+      }
     }
   }
 
@@ -30,21 +36,21 @@ const SignupScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.inputContainer}>
         <Input
-          label="Email"
-          keyboardType='email-address'
+          label="Name"
+          keyboardType="default"
           inputContainerStyle={styles.input}
-          onChange={e => setEmail(e.nativeEvent.text)}
+          onChange={e => setTmpName(e.nativeEvent.text)}
         />
         <Input
           label="Password"
-          keyboardType='default'
+          keyboardType="default"
           secureTextEntry={!showPsw}
           inputContainerStyle={styles.input}
           onChange={e => setPsw(e.nativeEvent.text)}
         />
         <Input
           label="Confirm Password"
-          keyboardType='default'
+          keyboardType="default"
           secureTextEntry={!showPsw}
           inputContainerStyle={styles.input}
           onChange={e => setConfirmPsw(e.nativeEvent.text)}
@@ -56,7 +62,7 @@ const SignupScreen = ({ navigation }) => {
         raised
         buttonStyle={styles.btn}
         containerStyle={styles.btnContainer}
-        onPress={() => checkValid()}
+        onPress={() => onClickRegister()}
       />
     </SafeAreaView>
   )
