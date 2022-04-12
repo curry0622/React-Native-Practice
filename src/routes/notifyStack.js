@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import NotifyScreen from '../screens/test';
+import { NotifyScreen } from '../screens/test';
 
 const Stack = createStackNavigator();
 

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
-import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator } from 'react-native';
-import { ListItem, Badge, ButtonGroup, Input } from 'react-native-elements';
+import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator, Alert } from 'react-native';
+import { ListItem, Badge, ButtonGroup, Input, Button } from 'react-native-elements';
 import UserContext from '../../contexts/userContext';
 import { getFavStocks, getFavCryptos, getRcmdStocks, getRcmdCryptos } from '../../apis/user';
 import { getCryptoInfo } from '../../apis/crypto';
@@ -10,8 +10,8 @@ const HomeScreen = ({ navigation }) => {
   const { name } = useContext(UserContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  const [favStocks, setFavStocks] = useState(null);
-  const [favCryptos, setFavCryptos] = useState(null);
+  const [favStocks, setFavStocks] = useState([]);
+  const [favCryptos, setFavCryptos] = useState([]);
   const [rcmdStocks, setRcmdStocks] = useState([]);
   const [rcmdCryptos, setRcmdCryptos] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate('Crypto', { ...crypto, refreshFavCryptos });
   };
 
-  const onSearch = async (type) => {
+  const onSearch = async () => {
     setLoading(true);
     if (selectedIndex === 0) {
       const tmp = await getStockInfo(searchVal);
@@ -101,12 +101,33 @@ const HomeScreen = ({ navigation }) => {
     setLoading(false);
   }, []);
 
-  const createFavStockBars = [...new Set(favStocks)].map((stock) => (
-    <View style={styles.listItem}>
+  const createFavStockBars = favStocks.map((stock) => (
+    <View style={styles.listItem} key={stock.number}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
         onPress={() => onPressStock(stock)}
         underlayColor="#ddd"
+        // leftContent={
+        //   <Button
+        //     title='移除最愛'
+        //     icon={{ name: 'delete', color: '#ef233c' }}
+        //     titleStyle={{ color: '#ef233c', fontSize: 14 }}
+        //     buttonStyle={{ minHeight: '100%', backgroundColor: '#fff', borderRightColor: '#ddd', borderRightWidth: 1, borderRadius: 0 }}
+        //     onPress={() => {
+        //       Alert.alert(
+        //         '警告',
+        //         `是否將 [${stock.number} ${stock.name}] 從最愛移除?`, [{
+        //             text: 'Cancel',
+        //             onPress: () => console.log('Cancel Pressed'),
+        //             style: 'cancel'
+        //           }, {
+        //             text: 'OK',
+        //             onPress: () => console.log('OK Pressed')
+        //           }]
+        //       );
+        //     }}
+        //   />
+        // }
       >
         <ListItem.Content>
           <ListItem.Title style={styles.title}>
@@ -129,8 +150,8 @@ const HomeScreen = ({ navigation }) => {
     </View>
   ));
 
-  const createFavCryptoBars = [...new Set(favCryptos)].map((crypto) => (
-    <View style={{ ...styles.listItem, height: 'auto' }}>
+  const createFavCryptoBars = favCryptos.map((crypto) => (
+    <View style={{ ...styles.listItem, height: 'auto' }} key={crypto.name}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
         onPress={() => onPressCrypto(crypto)}
@@ -149,7 +170,7 @@ const HomeScreen = ({ navigation }) => {
   ));
 
   const createRcmdStockBars = rcmdStocks.map((stock) => (
-    <View style={styles.listItem}>
+    <View style={styles.listItem} key={stock.number}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
         onPress={() => onPressStock(stock)}
@@ -173,7 +194,7 @@ const HomeScreen = ({ navigation }) => {
   ));
 
   const createRcmdCryptoBars = rcmdCryptos.map((crypto) => (
-    <View style={{ ...styles.listItem, height: 'auto' }}>
+    <View style={{ ...styles.listItem, height: 'auto' }} key={crypto.name}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
         onPress={() => onPressCrypto(crypto)}
@@ -227,12 +248,20 @@ const HomeScreen = ({ navigation }) => {
             onSubmitEditing={() => onSearch()}
           />
           <Text style={{ marginBottom: 15 }}>[ 我的最愛 ]</Text>
-          {
-            name === ''
-            ? <View style={styles.hint}><Text style={{ color: '#707070' }}>- 尚未登入 -</Text></View>
-            : (selectedIndex === 0 ? createFavStockBars : createFavCryptoBars)
-          }
-          {name !== '' && selectedIndex === 1 && (!favCryptos || favCryptos.length === 0) && <View style={styles.hint}><Text style={{ color: '#707070' }}>- 尚無最愛幣種 -</Text></View>}
+          {name === '' ? (
+            <View style={styles.hint}>
+              <Text style={{ color: '#707070' }}>- 尚未登入 -</Text>
+            </View>
+          ) : (
+            selectedIndex === 0 ?
+            createFavStockBars :
+            createFavCryptoBars
+          )}
+          {name !== '' && selectedIndex === 1 && favCryptos.length === 0 && (
+            <View style={styles.hint}>
+              <Text style={{ color: '#707070' }}>- 尚無最愛幣種 -</Text>
+            </View>
+          )}
           <Text style={{ marginBottom: 15 }}>[ 推薦{`${selectedIndex === 0 ? '台股' : '幣種'}`} ]</Text>
           {selectedIndex === 0 ? createRcmdStockBars : createRcmdCryptoBars}
         </View>
