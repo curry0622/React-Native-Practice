@@ -2,53 +2,55 @@ import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator, Alert } from 'react-native';
 import { ListItem, Badge, ButtonGroup, Input, Button } from 'react-native-elements';
 import UserContext from '../../contexts/userContext';
-import { getFavStocks, getFavCryptos, getRcmdStocks, getRcmdCryptos } from '../../apis/user';
+import { getRcmdStocks, getRcmdCryptos } from '../../apis/user';
 import { getCryptoInfo } from '../../apis/crypto';
 import { getStockInfo } from '../../apis/stock';
 
 const HomeScreen = ({ navigation }) => {
-  const { name } = useContext(UserContext);
+  const { name, fav, refreshFav } = useContext(UserContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  const [favStocks, setFavStocks] = useState([]);
-  const [favCryptos, setFavCryptos] = useState([]);
   const [rcmdStocks, setRcmdStocks] = useState([]);
   const [rcmdCryptos, setRcmdCryptos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchVal, setSearchVal] = useState(0);
 
-  const refreshFavStocks = async () => {
-    const tmp = await getFavStocks(name);
-    if (tmp) {
-      setFavStocks([...tmp]);
-    }
+  const getPercentageText = (priceIncrease, startPrice) => {
+    const percentage = (priceIncrease / startPrice) * 100;
+    return `${percentage > 0 ? '+' : ''}${percentage.toFixed(2)}%`;
   };
 
-  const refreshFavCryptos = async () => {
-    const tmp = await getFavCryptos(name);
-    if (tmp) {
-      setFavCryptos([...tmp]);
+  const refreshRcmd = async (type) => {
+    if (type === 'stock') {
+      const tmp = await getRcmdStocks();
+      if (tmp) {
+        setRcmdStocks([...tmp]);
+      }
+    } else if (type === 'crypto') {
+      const tmp = await getRcmdCryptos();
+      if (tmp) {
+        setRcmdCryptos([...tmp]);
+      }
+    } else {
+      let tmp = await getRcmdStocks();
+      if (tmp) {
+        setRcmdStocks([...tmp]);
+      }
+      tmp = await getRcmdCryptos();
+      if (tmp) {
+        setRcmdCryptos([...tmp]);
+      }
     }
   };
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    if (selectedIndex === 0) {
-      await refreshFavStocks();
+    await refreshRcmd(selectedIndex === 0 ? 'stock' : 'crypto');
+    if (name !== '') {
+      await refreshFav(selectedIndex === 0 ? 'stock' : 'crypto');
     }
-    else {
-      await refreshFavCryptos();
-    }
-    setRefreshing(false)
+    setRefreshing(false);
   }, [name, selectedIndex]);
-
-  const onPressStock = (stock) => {
-    navigation.navigate('Stock', { ...stock, refreshFavStocks });
-  };
-
-  const onPressCrypto = (crypto) => {
-    navigation.navigate('Crypto', { ...crypto, refreshFavCryptos });
-  };
 
   const onSearch = async () => {
     setLoading(true);
@@ -56,56 +58,41 @@ const HomeScreen = ({ navigation }) => {
       const tmp = await getStockInfo(searchVal);
       if (tmp) {
         setLoading(false);
-        navigation.navigate('Stock', { ...tmp, refreshFavStocks });
+        navigation.navigate('Stock', { ...tmp });
       }
-      setSearchVal('')
+      setSearchVal('');
     } else {
       const tmp = await getCryptoInfo(searchVal.toUpperCase());
       if (tmp) {
         setLoading(false);
-        navigation.navigate('Crypto', { ...tmp, refreshFavCryptos });
+        navigation.navigate('Crypto', { ...tmp });
       }
-      setSearchVal('')
+      setSearchVal('');
     }
     setLoading(false);
   };
 
-  const getPercentageText = (priceIncrease, startPrice) => {
-    const percentage = (priceIncrease / startPrice) * 100;
-    return `${percentage > 0 ? '+' : ''}${percentage.toFixed(2)}%`;
-  };
-
+  // Refresh favorite stocks and cryptos when user login
   useEffect(async () => {
     setLoading(true);
-    let tmp = await getFavStocks(name);
-    if (tmp) {
-      setFavStocks([...tmp]);
-    }
-    tmp = await getFavCryptos(name);
-    if (tmp) {
-      setFavCryptos([...tmp]);
+    if (name !== '') {
+      await refreshFav();
     }
     setLoading(false);
   }, [name]);
 
+  // Refresh recommended stocks and cryptos when mounted
   useEffect(async () => {
     setLoading(true);
-    let tmp = await getRcmdStocks();
-    if (tmp) {
-      setRcmdStocks([...tmp]);
-    }
-    tmp = await getRcmdCryptos();
-    if (tmp) {
-      setRcmdCryptos([...tmp]);
-    }
+    await refreshRcmd();
     setLoading(false);
   }, []);
 
-  const createFavStockBars = favStocks.map((stock) => (
+  const createFavStockBars = fav.stocks.map((stock) => (
     <View style={styles.listItem} key={stock.number}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
-        onPress={() => onPressStock(stock)}
+        onPress={() => navigation.navigate('Stock', { ...stock })}
         underlayColor="#ddd"
         // leftContent={
         //   <Button
@@ -142,7 +129,7 @@ const HomeScreen = ({ navigation }) => {
           </ListItem.Subtitle>
         </ListItem.Content>
         <Badge
-          value={getPercentageText(stock.price_increase, stock.now_price)}
+          value={getPercentageText(parseFloat(stock.price_increase), parseFloat(stock.now_price))}
           status={stock.price_increase > 0 ? 'error' : 'success'}
         />
         <ListItem.Chevron color="#707070" />
@@ -150,11 +137,11 @@ const HomeScreen = ({ navigation }) => {
     </View>
   ));
 
-  const createFavCryptoBars = favCryptos.map((crypto) => (
+  const createFavCryptoBars = fav.cryptos.map((crypto) => (
     <View style={{ ...styles.listItem, height: 'auto' }} key={crypto.name}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
-        onPress={() => onPressCrypto(crypto)}
+        onPress={() => navigation.navigate('Crypto', { ...crypto })}
         underlayColor="#ddd"
       >
         <ListItem.Content>
@@ -173,7 +160,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.listItem} key={stock.number}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
-        onPress={() => onPressStock(stock)}
+        onPress={() => navigation.navigate('Stock', { ...stock })}
         underlayColor="#ddd"
       >
         <ListItem.Content>
@@ -185,7 +172,7 @@ const HomeScreen = ({ navigation }) => {
           </ListItem.Subtitle>
         </ListItem.Content>
         <Badge
-          value={getPercentageText(stock.price_increase, stock.now_price)}
+          value={getPercentageText(parseFloat(stock.price_increase), parseFloat(stock.now_price))}
           status={stock.price_increase > 0 ? 'error' : 'success'}
         />
         <ListItem.Chevron color="#707070" />
@@ -197,7 +184,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={{ ...styles.listItem, height: 'auto' }} key={crypto.name}>
       <ListItem
         containerStyle={{ borderRadius: 5 }}
-        onPress={() => onPressCrypto(crypto)}
+        onPress={() => navigation.navigate('Crypto', { ...crypto })}
         underlayColor="#ddd"
       >
         <ListItem.Content>
@@ -257,7 +244,7 @@ const HomeScreen = ({ navigation }) => {
             createFavStockBars :
             createFavCryptoBars
           )}
-          {name !== '' && selectedIndex === 1 && favCryptos.length === 0 && (
+          {name !== '' && selectedIndex === 1 && fav.cryptos.length === 0 && (
             <View style={styles.hint}>
               <Text style={{ color: '#707070' }}>- 尚無最愛幣種 -</Text>
             </View>

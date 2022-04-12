@@ -62,7 +62,7 @@ const StockScreen = ({ route }) => {
         setFav(false);
       }
     }
-    await route.params.refreshFavStocks();
+    // await route.params.refreshFavStocks();
   };
 
   useEffect(async () => {
