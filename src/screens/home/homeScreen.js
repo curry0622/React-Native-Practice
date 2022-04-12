@@ -76,7 +76,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(async () => {
     setLoading(true);
     if (name !== '') {
-      await refreshFav();
+      await refreshFav('both');
     }
     setLoading(false);
   }, [name]);
@@ -84,7 +84,7 @@ const HomeScreen = ({ navigation }) => {
   // Refresh recommended stocks and cryptos when mounted
   useEffect(async () => {
     setLoading(true);
-    await refreshRcmd();
+    await refreshRcmd('both');
     setLoading(false);
   }, []);
 

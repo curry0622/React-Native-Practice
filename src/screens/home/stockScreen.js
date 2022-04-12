@@ -12,7 +12,6 @@ import {
   getStockPred,
   getStockRSI
 } from '../../apis/stock';
-import { getFavStocks, addFavStock, delFavStock } from '../../apis/user';
 
 const getPercentageText = (priceIncrease, startPrice) => {
   const percentage = (priceIncrease / startPrice) * 100;
@@ -23,17 +22,18 @@ const getIncreaseText = (priceIncrease) => {
   return `${priceIncrease > 0 ? '↑' : '↓'} ${Math.abs(priceIncrease).toFixed(2)}`;
 };
 
-const blankImg = 'https://imgur.com/KNsnWx0.png'
+const blankImg = 'https://imgur.com/KNsnWx0.png';
 
 const StockScreen = ({ route }) => {
-  const { name } = useContext(UserContext);
+  const { name, fav, addFav, delFav } = useContext(UserContext);
   const [stockInfo, setStockInfo] = useState(route.params);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scale, setScale] = useState(true)
-  const [fav, setFav] = useState(false)
-  const [chartLoading, setChartLoading] = useState(false)
-  const [favLoading, setFavLoading] = useState(false);
-  const [imgLink, setImgLink] = useState('')
+  const [scale, setScale] = useState(true);
+  const [isFav, setIsFav] = useState(
+    fav.stocks.filter((s) => s.number === route.params.number).length > 0
+  );
+  const [chartLoading, setChartLoading] = useState(false);
+  const [imgLink, setImgLink] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [pred, setPred] = useState('');
 
@@ -41,28 +41,19 @@ const StockScreen = ({ route }) => {
     setRefreshing(true);
     const tmp = await getStockInfo(stockInfo.number);
     if (tmp) {
-      setStockInfo(tmp);
+      setStockInfo([...tmp]);
     }
     setRefreshing(false);
   }, []);
 
-  const onPressAdd = async () => {
-    if (stockInfo.number === '0000') {
-      return;
-    } else if (fav) {
-      setFav(false);
-      const tmp = await delFavStock({ name, stockNum: stockInfo.number });
-      if (!tmp) {
-        setFav(true);
-      }
+  const onPressFav = () => {
+    if (isFav) {
+      setIsFav(false);
+      delFav('stock', stockInfo);
     } else {
-      setFav(true);
-      const tmp = await addFavStock({ name, stockNum: stockInfo.number });
-      if (!tmp) {
-        setFav(false);
-      }
+      setIsFav(true);
+      addFav('stock', stockInfo);
     }
-    // await route.params.refreshFavStocks();
   };
 
   useEffect(async () => {
@@ -116,19 +107,6 @@ const StockScreen = ({ route }) => {
     }
   }, [stockInfo]);
 
-  useEffect(async () => {
-    if (stockInfo.number === '0000') {
-      setFav(true);
-    } else {
-      setFavLoading(true);
-      const tmp = await getFavStocks(name);
-      if (tmp) {
-        setFav(tmp.filter(e => e.number === stockInfo.number).length > 0)
-      }
-      setFavLoading(false);
-    }
-  }, [name]);
-
   return (
     <ScrollView
       style={styles.container}
@@ -164,13 +142,13 @@ const StockScreen = ({ route }) => {
         </View>
         <Button
           type="solid"
-          disabled={favLoading}
-          icon={!favLoading ? {
-            name: `${fav ? 'bookmark' : 'bookmark-o'}`,
+          disabled={name === ''}
+          icon={{
+            name: `${isFav ? 'bookmark' : 'bookmark-o'}`,
             type: 'font-awesome',
             size: 20,
-            color: '#f50',
-          } : <ActivityIndicator />}
+            color: `${name !== '' ? '#f50' : '#ddd'}`,
+          }}
           buttonStyle={{
             backgroundColor: '#fff',
             borderWidth: 1,
@@ -180,10 +158,10 @@ const StockScreen = ({ route }) => {
           disabledStyle={{
             backgroundColor: '#fff',
             borderWidth: 1,
-            borderColor: '#f1f2f1',
+            borderColor: '#ddd',
             borderRadius: 5,
           }}
-          onPress={() => onPressAdd()}
+          onPress={() => onPressFav()}
         />
       </View>
       <View style={styles.infoContainer}>
