@@ -7,7 +7,7 @@ import { getCryptoInfo } from '../../apis/crypto';
 import { getStockInfo } from '../../apis/stock';
 
 const HomeScreen = ({ navigation }) => {
-  const { name, setName } = useContext(UserContext);
+  const { name } = useContext(UserContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [favStocks, setFavStocks] = useState(null);

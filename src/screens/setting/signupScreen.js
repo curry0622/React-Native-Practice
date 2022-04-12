@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import UserContext from '../../contexts/userContext';
 import { signup } from '../../apis/user';

@@ -26,7 +26,7 @@ const getIncreaseText = (priceIncrease) => {
 const blankImg = 'https://imgur.com/KNsnWx0.png'
 
 const StockScreen = ({ route }) => {
-  const { name, setName } = useContext(UserContext);
+  const { name } = useContext(UserContext);
   const [stockInfo, setStockInfo] = useState(route.params);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scale, setScale] = useState(true)

@@ -5,7 +5,7 @@ import UserContext from '../../contexts/userContext';
 import { login } from '../../apis/user';
 
 const LoginScreen = ({ navigation }) => {
-  const { name, setName } = useContext(UserContext);
+  const { setName } = useContext(UserContext);
   const [psw, setPsw] = useState('');
   const [tmpName, setTmpName] = useState('');
   const [loading, setLoading] = useState(false);
