@@ -39,9 +39,13 @@ const StockScreen = ({ route }) => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    const tmp = await getStockInfo(stockInfo.number);
+    let tmp = await getStockInfo(stockInfo.number);
     if (tmp) {
       setStockInfo([...tmp]);
+    }
+    tmp = await getStockPred(stockInfo.number);
+    if (tmp) {
+      setPred(tmp[0]);
     }
     setRefreshing(false);
   }, []);
@@ -105,7 +109,7 @@ const StockScreen = ({ route }) => {
     if (tmp) {
       setPred(tmp[0]);
     }
-  }, [stockInfo]);
+  }, []);
 
   return (
     <ScrollView

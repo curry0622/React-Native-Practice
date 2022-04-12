@@ -12,46 +12,43 @@ import {
   getCryptoPred,
   getCryptoRSI,
 } from '../../apis/crypto';
-import { getFavCryptos, delFavCrypto, addFavCrypto } from '../../apis/user';
 
-const blankImg = 'https://imgur.com/KNsnWx0.png'
+const blankImg = 'https://imgur.com/KNsnWx0.png';
 
 const CryptoScreen = ({ route }) => {
-  const { name, setName } = useContext(UserContext);
+  const { name, fav, addFav, delFav } = useContext(UserContext);
   const [cryptoInfo, setCryptoInfo] = useState(route.params);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scale, setScale] = useState(true)
-  const [fav, setFav] = useState(false)
-  const [chartLoading, setChartLoading] = useState(false)
-  const [favLoading, setFavLoading] = useState(false);
-  const [imgLink, setImgLink] = useState('')
+  const [isFav, setIsFav] = useState(
+    fav.cryptos.filter((c) => c.name === route.params.name).length > 0
+  );
+  const [chartLoading, setChartLoading] = useState(false);
+  const [imgLink, setImgLink] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [pred, setPred] = useState('');
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    const tmp = await getCryptoInfo(cryptoInfo.name);
+    let tmp = await getCryptoInfo(cryptoInfo.name);
     if (tmp) {
       setCryptoInfo(tmp);
+    }
+    tmp = await getCryptoPred(cryptoInfo.name);
+    if (tmp) {
+      setPred(tmp[0]);
     }
     setRefreshing(false);
   }, []);
 
-  const onPressAdd = async () => {
-    if (fav) {
-      setFav(false);
-      const tmp = await delFavCrypto({ name, cryptoName: cryptoInfo.name });
-      if (!tmp) {
-        setFav(true);
-      }
+  const onPressFav = () => {
+    if (isFav) {
+      setIsFav(false);
+      delFav('crypto', cryptoInfo);
     } else {
-      setFav(true);
-      const tmp = await addFavCrypto({ name, cryptoName: cryptoInfo.name });
-      if (!tmp) {
-        setFav(false);
-      }
+      setIsFav(true);
+      addFav('crypto', cryptoInfo);
     }
-    await route.params.refreshFavCryptos();
   };
 
   useEffect(async () => {
@@ -103,16 +100,7 @@ const CryptoScreen = ({ route }) => {
     if (tmp) {
       setPred(tmp[0]);
     }
-  }, [cryptoInfo]);
-
-  useEffect(async () => {
-    setFavLoading(true);
-    const tmp = await getFavCryptos(name);
-    if (tmp) {
-      setFav(tmp.filter(e => e.name === cryptoInfo.name).length > 0)
-    }
-    setFavLoading(false);
-  }, [name]);
+  }, []);
 
   return (
     <ScrollView
@@ -149,13 +137,13 @@ const CryptoScreen = ({ route }) => {
         </View>
         <Button
           type="solid"
-          disabled={favLoading}
-          icon={!favLoading ? {
-            name: `${fav ? 'bookmark' : 'bookmark-o'}`,
+          disabled={name === ''}
+          icon={{
+            name: `${isFav ? 'bookmark' : 'bookmark-o'}`,
             type: 'font-awesome',
             size: 20,
-            color: '#f50',
-          } : <ActivityIndicator />}
+            color: `${name !== '' ? '#f50' : '#ddd'}`,
+          }}
           buttonStyle={{
             backgroundColor: '#fff',
             borderWidth: 1,
@@ -165,10 +153,10 @@ const CryptoScreen = ({ route }) => {
           disabledStyle={{
             backgroundColor: '#fff',
             borderWidth: 1,
-            borderColor: '#f1f2f1',
+            borderColor: '#ddd',
             borderRadius: 5,
           }}
-          onPress={() => onPressAdd()}
+          onPress={() => onPressFav()}
         />
       </View>
       <View style={styles.infoContainer}>
