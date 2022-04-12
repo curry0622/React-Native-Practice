@@ -2,13 +2,12 @@ import React, { useState, useContext } from 'react';
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import UserContext from '../../contexts/userContext';
-import signup from '../../apis/signup';
+import { signup } from '../../apis/user';
 
 const SignupScreen = ({ navigation }) => {
-  const { name, setName } = useContext(UserContext);
-  const [showPsw, setShowPsw] = useState(false);
-  const [psw, setPsw] = useState('');
+  const { setName } = useContext(UserContext);
   const [tmpName, setTmpName] = useState('');
+  const [psw, setPsw] = useState('');
   const [confirmPsw, setConfirmPsw] = useState('');
 
   const onClickRegister = async () => {
@@ -44,14 +43,14 @@ const SignupScreen = ({ navigation }) => {
         <Input
           label="Password"
           keyboardType="default"
-          secureTextEntry={!showPsw}
+          secureTextEntry={true}
           inputContainerStyle={styles.input}
           onChange={e => setPsw(e.nativeEvent.text)}
         />
         <Input
           label="Confirm Password"
           keyboardType="default"
-          secureTextEntry={!showPsw}
+          secureTextEntry={true}
           inputContainerStyle={styles.input}
           onChange={e => setConfirmPsw(e.nativeEvent.text)}
         />

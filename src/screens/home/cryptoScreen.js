@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import { Badge, Button, ButtonGroup } from 'react-native-elements';
-import { Ionicons } from '@expo/vector-icons';
 import UserContext from '../../contexts/userContext';
-import getFavCryptos from '../../apis/getFavCryptos';
-import getCryptoInfo from  '../../apis/getCryptoInfo';
-import getCryptoHist from '../../apis/getCryptoHist';
-import getCryptoPred from  '../../apis/getCryptoPred';
-import getCryptoMACD from '../../apis/getCryptoMACD';
-import getCryptoMACDOP from '../../apis/getCryptoMACDOP';
-import getCryptoKD from '../../apis/getCryptoKD';
-import getCryptoRSI from '../../apis/getCryptoRSI';
-import getCryptoBOOL from '../../apis/getCryptoBOOL';
-import delFavCrypto from '../../apis/delFavCrypto';
-import addFavCrypto from '../../apis/addFavCrypto';
+import {
+  getCryptoBOOL,
+  getCryptoHist,
+  getCryptoInfo,
+  getCryptoKD,
+  getCryptoMACD,
+  getCryptoMACDOP,
+  getCryptoPred,
+  getCryptoRSI,
+} from '../../apis/crypto';
+import { getFavCryptos, delFavCrypto, addFavCrypto } from '../../apis/user';
 
 const blankImg = 'https://imgur.com/KNsnWx0.png'
 

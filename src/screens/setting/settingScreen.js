@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Text, SafeAreaView, View, ScrollView } from 'react-native';
-import { ListItem, Button } from 'react-native-elements';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { Button } from 'react-native-elements';
+import { Ionicons } from '@expo/vector-icons';
 import UserContext from '../../contexts/userContext';
 
 const SettingScreen = ({ navigation }) => {
-  const { name, setName } = useContext(UserContext);
+  const { name } = useContext(UserContext);
 
   return (
     <ScrollView style={styles.container} >

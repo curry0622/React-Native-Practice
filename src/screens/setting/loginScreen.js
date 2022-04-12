@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import UserContext from '../../contexts/userContext';
-import login from '../../apis/login';
+import { login } from '../../apis/user';
 
 const LoginScreen = ({ navigation }) => {
   const { name, setName } = useContext(UserContext);

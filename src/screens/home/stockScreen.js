@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import { Badge, Button, ButtonGroup } from 'react-native-elements';
-import { Ionicons } from '@expo/vector-icons';
 import UserContext from '../../contexts/userContext';
-import getFavStocks from '../../apis/getFavStocks';
-import getStockInfo from  '../../apis/getStockInfo';
-import getStockHist from '../../apis/getStockHist';
-import getStockPred from  '../../apis/getStockPred';
-import getStockMACD from '../../apis/getStockMACD';
-import getStockMACDOP from '../../apis/getStockMACDOP';
-import getStockKD from '../../apis/getStockKD';
-import getStockRSI from '../../apis/getStockRSI';
-import getStockBOOL from '../../apis/getStockBOOL';
-import addFavStock from '../../apis/addFavStock';
-import delFavStock from '../../apis/delFavStock';
+import {
+  getStockBOOL,
+  getStockHist,
+  getStockInfo,
+  getStockKD,
+  getStockMACD,
+  getStockMACDOP,
+  getStockPred,
+  getStockRSI
+} from '../../apis/stock';
+import { getFavStocks, addFavStock, delFavStock } from '../../apis/user';
 
 const getPercentageText = (priceIncrease, startPrice) => {
   const percentage = (priceIncrease / startPrice) * 100;

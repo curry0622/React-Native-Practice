@@ -1,13 +1,10 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator } from 'react-native';
-import { ListItem, Badge, ButtonGroup, Input, Button } from 'react-native-elements';
+import { ListItem, Badge, ButtonGroup, Input } from 'react-native-elements';
 import UserContext from '../../contexts/userContext';
-import getFavStocks from '../../apis/getFavStocks';
-import getRcmdStocks from '../../apis/getRcmdStocks';
-import getRcmdCryptos from '../../apis/getRcmdCryptos';
-import getStockInfo from '../../apis/getStockInfo';
-import getCryptoInfo from '../../apis/getCryptoInfo';
-import getFavCryptos from '../../apis/getFavCryptos';
+import { getFavStocks, getFavCryptos, getRcmdStocks, getRcmdCryptos } from '../../apis/user';
+import { getCryptoInfo } from '../../apis/crypto';
+import { getStockInfo } from '../../apis/stock';
 
 const HomeScreen = ({ navigation }) => {
   const { name, setName } = useContext(UserContext);
