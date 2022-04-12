@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, SafeAreaView, ActivityIndicator } from 'react-n
 import { Button, Input } from 'react-native-elements';
 import UserContext from '../../contexts/userContext';
 import { login } from '../../apis/user';
+import { SvgUri } from 'react-native-svg';
 
 const LoginScreen = ({ navigation }) => {
   const { setName } = useContext(UserContext);
@@ -35,6 +36,13 @@ const LoginScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputContainer}>
+        <View style={styles.avatarContainer}>
+          <SvgUri
+            width="100%"
+            height="100%"
+            uri={`https://avatars.dicebear.com/api/open-peeps/${tmpName}.svg`}
+          />
+        </View>
         <Input
           label="Name"
           keyboardType="default"
@@ -84,6 +92,18 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 20,
     marginTop: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 5,
+    borderWidth: 1,
+    overflow: 'hidden',
+    margin: 20,
+    borderColor: '#ddd',
   },
   input: {
     height: 48,

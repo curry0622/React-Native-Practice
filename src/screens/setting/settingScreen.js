@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { Button } from 'react-native-elements';
-import { Ionicons } from '@expo/vector-icons';
 import UserContext from '../../contexts/userContext';
+import { SvgUri } from 'react-native-svg';
 
 const SettingScreen = ({ navigation }) => {
   const { name } = useContext(UserContext);
@@ -10,8 +10,14 @@ const SettingScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} >
       <View style={styles.listItemsContainer}>
-        <Ionicons name="person-circle-sharp" size={72} color={`${name === '' ? '#707070' : '#00bbf0'}`} />
-        <Text style={{ fontSize: 18, color: '#707070' }}>{name === '' ? '尚未登入' : name}</Text>
+        <View style={styles.avatarContainer}>
+          <SvgUri
+            width="100%"
+            height="100%"
+            uri={`https://avatars.dicebear.com/api/open-peeps/${name}.svg`}
+          />
+        </View>
+        <Text style={{ fontSize: 18, color: '#707070' }}>{name === '' ? '訪客' : name}</Text>
         <Button
           title={name === '' ? '登入': '切換帳號'}
           raised
@@ -55,5 +61,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
     paddingHorizontal: 20,
-  }
+  },
+  avatarContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 5,
+    borderWidth: 1,
+    overflow: 'hidden',
+    margin: 20,
+    borderColor: '#ddd',
+  },
 });
