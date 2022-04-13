@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
+import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator, Alert } from 'react-native';
 import { ListItem, Badge, ButtonGroup, Input, Button } from 'react-native-elements';
 import UserContext from '../../contexts/userContext';
@@ -74,130 +75,119 @@ const HomeScreen = ({ navigation }) => {
 
   // Refresh favorite stocks and cryptos when user login
   useEffect(async () => {
-    setLoading(true);
+    // setLoading(true);
     if (name !== '') {
       await refreshFav('both');
     }
-    setLoading(false);
+    // setLoading(false);
   }, [name]);
 
   // Refresh recommended stocks and cryptos when mounted
   useEffect(async () => {
-    setLoading(true);
+    // setLoading(true);
     await refreshRcmd('both');
-    setLoading(false);
+    // setLoading(false);
   }, []);
 
-  const createFavStockBars = fav.stocks.map((stock) => (
-    <View style={styles.listItem} key={stock.number}>
-      <ListItem
-        containerStyle={{ borderRadius: 5 }}
-        onPress={() => navigation.navigate('Stock', { ...stock })}
-        underlayColor="#ddd"
-        // leftContent={
-        //   <Button
-        //     title='移除最愛'
-        //     icon={{ name: 'delete', color: '#ef233c' }}
-        //     titleStyle={{ color: '#ef233c', fontSize: 14 }}
-        //     buttonStyle={{ minHeight: '100%', backgroundColor: '#fff', borderRightColor: '#ddd', borderRightWidth: 1, borderRadius: 0 }}
-        //     onPress={() => {
-        //       Alert.alert(
-        //         '警告',
-        //         `是否將 [${stock.number} ${stock.name}] 從最愛移除?`, [{
-        //             text: 'Cancel',
-        //             onPress: () => console.log('Cancel Pressed'),
-        //             style: 'cancel'
-        //           }, {
-        //             text: 'OK',
-        //             onPress: () => console.log('OK Pressed')
-        //           }]
-        //       );
-        //     }}
-        //   />
-        // }
-      >
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>
-            {stock.number === '0000' ? (
-              `${stock.name}  $${stock.now_price}`
-            ) : (
-              `[${stock.number}]  ${stock.name}  $${stock.now_price}`
-            )}
-          </ListItem.Title>
-          <ListItem.Subtitle style={styles.subtitle}>
-            {`開${stock.start_price}  高${stock.high_price}  低${stock.low_price}`}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-        <Badge
-          value={getPercentageText(parseFloat(stock.price_increase), parseFloat(stock.now_price))}
-          status={stock.price_increase > 0 ? 'error' : 'success'}
-        />
-        <ListItem.Chevron color="#707070" />
-      </ListItem>
-    </View>
-  ));
+  const testFunc = (type) => {
+    return (type === 'fav' ? fav.stocks : rcmdStocks).map((s) => {
+      console.log(s.name);
+      return <Text>{s.name}</Text>;
+    });
+  };
 
-  const createFavCryptoBars = fav.cryptos.map((crypto) => (
-    <View style={{ ...styles.listItem, height: 'auto' }} key={crypto.name}>
-      <ListItem
-        containerStyle={{ borderRadius: 5 }}
-        onPress={() => navigation.navigate('Crypto', { ...crypto })}
-        underlayColor="#ddd"
-      >
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>{`${crypto.name}  $${crypto.now_price}`}</ListItem.Title>
-          <ListItem.Subtitle style={styles.subtitle}>
-            {`高${crypto.high_price}  低${crypto.low_price}`}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-        <Badge value={crypto.price_increase_rate} status={crypto.price_increase[0] === '+' ? 'error' : 'success'} />
-        <ListItem.Chevron color="#707070" />
-      </ListItem>
-    </View>
-  ));
+  const createStockBars = (type) => ((type === 'fav' ? fav.stocks : rcmdStocks).map((stock) => {
+    const {
+      number,
+      name,
+      start_price,
+      now_price,
+      high_price,
+      low_price,
+      price_increase
+    } = stock;
 
-  const createRcmdStockBars = rcmdStocks.map((stock) => (
-    <View style={styles.listItem} key={stock.number}>
-      <ListItem
-        containerStyle={{ borderRadius: 5 }}
-        onPress={() => navigation.navigate('Stock', { ...stock })}
-        underlayColor="#ddd"
-      >
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>
-            {`[${stock.number}]  ${stock.name}  $${stock.now_price}`}
-          </ListItem.Title>
-          <ListItem.Subtitle style={styles.subtitle}>
-            {`開${stock.start_price}  高${stock.high_price}  低${stock.low_price}`}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-        <Badge
-          value={getPercentageText(parseFloat(stock.price_increase), parseFloat(stock.now_price))}
-          status={stock.price_increase > 0 ? 'error' : 'success'}
-        />
-        <ListItem.Chevron color="#707070" />
-      </ListItem>
-    </View>
-  ));
+    const isFav = fav.stocks.filter((s) => s.number === number).length > 0;
 
-  const createRcmdCryptoBars = rcmdCryptos.map((crypto) => (
-    <View style={{ ...styles.listItem, height: 'auto' }} key={crypto.name}>
-      <ListItem
-        containerStyle={{ borderRadius: 5 }}
-        onPress={() => navigation.navigate('Crypto', { ...crypto })}
-        underlayColor="#ddd"
-      >
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>{`${crypto.name}  $${crypto.now_price}`}</ListItem.Title>
-          <ListItem.Subtitle style={styles.subtitle}>
-            {`高${crypto.high_price}  低${crypto.low_price}`}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-        <Badge value={crypto.price_increase_rate} status={crypto.price_increase[0] === '+' ? 'error' : 'success'} />
-        <ListItem.Chevron color="#707070" />
-      </ListItem>
-    </View>
-  ));
+    return (
+      <View style={styles.listItem} key={number}>
+        <ListItem.Swipeable
+          containerStyle={{ borderRadius: 5 }}
+          onPress={() => navigation.navigate('Stock', { ...stock })}
+          underlayColor="#ddd"
+          leftContent={
+            <Button
+              title={isFav ? '   移除最愛' : '   加入最愛'}
+              icon={<FontAwesome name={isFav ? 'trash' : 'bookmark'} size={18} color="#f72585" />}
+              titleStyle={{ color: '#f72585', fontSize: 14 }}
+              buttonStyle={{ minHeight: '100%', backgroundColor: '#fff', borderRightColor: '#ddd', borderRightWidth: 1, borderRadius: 0 }}
+              onPress={() => {
+                Alert.alert(
+                  '警告',
+                  `是否將 [${number} ${name}] 從最愛移除?`, [{
+                      text: 'Cancel',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel'
+                    }, {
+                      text: 'OK',
+                      onPress: () => console.log('OK Pressed')
+                    }]
+                );
+              }}
+            />
+          }
+        >
+          <ListItem.Content>
+            <ListItem.Title style={styles.title}>
+              {number === '0000' ? (
+                `${name}  $${now_price}`
+              ) : (
+                `[${number}]  ${name}  $${now_price}`
+              )}
+            </ListItem.Title>
+            <ListItem.Subtitle style={styles.subtitle}>
+              {`開${start_price}  高${high_price}  低${low_price}`}
+            </ListItem.Subtitle>
+          </ListItem.Content>
+          <Badge
+            value={getPercentageText(parseFloat(price_increase), parseFloat(now_price))}
+            status={price_increase > 0 ? 'error' : 'success'}
+          />
+          <ListItem.Chevron color="#707070" />
+        </ListItem.Swipeable>
+      </View>
+    );
+  }));
+
+  const createCryptoBars = (type) => ((type === 'fav' ? fav.cryptos : rcmdCryptos).map((crypto) => {
+    const {
+      name,
+      now_price,
+      high_price,
+      low_price,
+      price_increase,
+      price_increase_rate
+    } = crypto;
+
+    return (
+      <View style={{ ...styles.listItem, height: 'auto' }} key={name}>
+        <ListItem
+          containerStyle={{ borderRadius: 5 }}
+          onPress={() => navigation.navigate('Crypto', { ...crypto })}
+          underlayColor="#ddd"
+        >
+          <ListItem.Content>
+            <ListItem.Title style={styles.title}>{`${name}  $${now_price}`}</ListItem.Title>
+            <ListItem.Subtitle style={styles.subtitle}>
+              {`高${high_price}  低${low_price}`}
+            </ListItem.Subtitle>
+          </ListItem.Content>
+          <Badge value={price_increase_rate} status={price_increase[0] === '+' ? 'error' : 'success'} />
+          <ListItem.Chevron color="#707070" />
+        </ListItem>
+      </View>
+    );
+  }));
 
   return (
     <ScrollView
@@ -241,8 +231,8 @@ const HomeScreen = ({ navigation }) => {
             </View>
           ) : (
             selectedIndex === 0 ?
-            createFavStockBars :
-            createFavCryptoBars
+            createStockBars('fav') :
+            createCryptoBars('fav')
           )}
           {name !== '' && selectedIndex === 1 && fav.cryptos.length === 0 && (
             <View style={styles.hint}>
@@ -250,7 +240,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
           )}
           <Text style={{ marginBottom: 15 }}>[ 推薦{`${selectedIndex === 0 ? '台股' : '幣種'}`} ]</Text>
-          {selectedIndex === 0 ? createRcmdStockBars : createRcmdCryptoBars}
+          {selectedIndex === 0 ? createStockBars('rcmd') : createCryptoBars('rcmd')}
         </View>
       )}
     </ScrollView >
