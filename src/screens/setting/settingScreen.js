@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button } from '@rneui/themed';
 import UserContext from '../../contexts/userContext';
 import { SvgUri } from 'react-native-svg';
 

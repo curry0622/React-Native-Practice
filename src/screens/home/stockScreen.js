@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { StyleSheet, Text, ScrollView, View, Image, ActivityIndicator, RefreshControl } from 'react-native';
-import { Badge, Button, ButtonGroup } from 'react-native-elements';
+import { Badge, Button, ButtonGroup } from '@rneui/themed';
 import UserContext from '../../contexts/userContext';
 import {
   getStockBOOL,

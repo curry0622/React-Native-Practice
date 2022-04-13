@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, SafeAreaView } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button } from '@rneui/themed';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as WebBrowser from 'expo-web-browser';
 

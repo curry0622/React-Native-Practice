@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { StyleSheet, View, SafeAreaView } from 'react-native';
-import { Button, Input, Avatar } from 'react-native-elements';
+import { Button, Input, Avatar } from '@rneui/themed';
 import UserContext from '../../contexts/userContext';
 import { signup } from '../../apis/user';
 import { SvgUri } from 'react-native-svg';
