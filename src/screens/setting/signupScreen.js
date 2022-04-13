@@ -1,17 +1,19 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, View, SafeAreaView } from 'react-native';
-import { Button, Input, Avatar } from 'react-native-elements';
+import { StyleSheet, View, SafeAreaView, ActivityIndicator } from 'react-native';
+import { Button, Input } from '@rneui/themed';
 import UserContext from '../../contexts/userContext';
 import { signup } from '../../apis/user';
 import { SvgUri } from 'react-native-svg';
 
 const SignupScreen = ({ navigation }) => {
-  const { name, setName } = useContext(UserContext);
+  const { setName } = useContext(UserContext);
   const [tmpName, setTmpName] = useState('');
   const [psw, setPsw] = useState('');
   const [confirmPsw, setConfirmPsw] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const onClickRegister = async () => {
+    setLoading(true);
     if ((tmpName.length == 0) || (psw.length == 0) || (confirmPsw.length == 0)) {
       alert('Required field is missing');
     } else if (((/[ ]/).test(psw))) {
@@ -30,6 +32,7 @@ const SignupScreen = ({ navigation }) => {
         }
       }
     }
+    setLoading(false);
   }
 
   return (
@@ -64,12 +67,13 @@ const SignupScreen = ({ navigation }) => {
         />
       </View>
       <Button
-        title="Register"
+        title={loading ? '' : 'Register'}
         type="solid"
         raised
         buttonStyle={styles.btn}
         containerStyle={styles.btnContainer}
         onPress={() => onClickRegister()}
+        icon={loading && <ActivityIndicator color="white" />}
       />
     </SafeAreaView>
   )

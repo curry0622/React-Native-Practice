@@ -1,54 +1,56 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
-import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator, Alert } from 'react-native';
-import { ListItem, Badge, ButtonGroup, Input, Button } from 'react-native-elements';
+import { FontAwesome } from '@expo/vector-icons';
+import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator } from 'react-native';
+import { ButtonGroup, Input, Button } from '@rneui/themed';
+import { InfoBar } from '../../components/home';
 import UserContext from '../../contexts/userContext';
-import { getFavStocks, getFavCryptos, getRcmdStocks, getRcmdCryptos } from '../../apis/user';
+import { getRcmdStocks, getRcmdCryptos } from '../../apis/user';
 import { getCryptoInfo } from '../../apis/crypto';
 import { getStockInfo } from '../../apis/stock';
+// import { useLogger } from '../../hooks';
 
 const HomeScreen = ({ navigation }) => {
-  const { name } = useContext(UserContext);
+  const { name, fav, addFav, delFav, refreshFav } = useContext(UserContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  const [favStocks, setFavStocks] = useState([]);
-  const [favCryptos, setFavCryptos] = useState([]);
   const [rcmdStocks, setRcmdStocks] = useState([]);
   const [rcmdCryptos, setRcmdCryptos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchVal, setSearchVal] = useState(0);
 
-  const refreshFavStocks = async () => {
-    const tmp = await getFavStocks(name);
-    if (tmp) {
-      setFavStocks([...tmp]);
-    }
-  };
+  // useLogger(rcmdStocks);
 
-  const refreshFavCryptos = async () => {
-    const tmp = await getFavCryptos(name);
-    if (tmp) {
-      setFavCryptos([...tmp]);
+  const refreshRcmd = async (type) => {
+    if (type === 'Stock') {
+      const tmp = await getRcmdStocks();
+      if (tmp) {
+        setRcmdStocks([...tmp]);
+      }
+    } else if (type === 'crypto') {
+      const tmp = await getRcmdCryptos();
+      if (tmp) {
+        setRcmdCryptos([...tmp]);
+      }
+    } else {
+      let tmp = await getRcmdStocks();
+      if (tmp) {
+        setRcmdStocks([...tmp]);
+      }
+      tmp = await getRcmdCryptos();
+      if (tmp) {
+        setRcmdCryptos([...tmp]);
+      }
     }
   };
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    if (selectedIndex === 0) {
-      await refreshFavStocks();
+    await refreshRcmd(selectedIndex === 0 ? 'Stock' : 'crypto');
+    if (name !== '') {
+      await refreshFav(selectedIndex === 0 ? 'Stock' : 'crypto');
     }
-    else {
-      await refreshFavCryptos();
-    }
-    setRefreshing(false)
+    setRefreshing(false);
   }, [name, selectedIndex]);
-
-  const onPressStock = (stock) => {
-    navigation.navigate('Stock', { ...stock, refreshFavStocks });
-  };
-
-  const onPressCrypto = (crypto) => {
-    navigation.navigate('Crypto', { ...crypto, refreshFavCryptos });
-  };
 
   const onSearch = async () => {
     setLoading(true);
@@ -56,161 +58,116 @@ const HomeScreen = ({ navigation }) => {
       const tmp = await getStockInfo(searchVal);
       if (tmp) {
         setLoading(false);
-        navigation.navigate('Stock', { ...tmp, refreshFavStocks });
+        navigation.navigate('Stock', { ...tmp });
       }
-      setSearchVal('')
+      setSearchVal('');
     } else {
       const tmp = await getCryptoInfo(searchVal.toUpperCase());
       if (tmp) {
         setLoading(false);
-        navigation.navigate('Crypto', { ...tmp, refreshFavCryptos });
+        navigation.navigate('Crypto', { ...tmp });
       }
-      setSearchVal('')
+      setSearchVal('');
     }
     setLoading(false);
   };
 
-  const getPercentageText = (priceIncrease, startPrice) => {
-    const percentage = (priceIncrease / startPrice) * 100;
-    return `${percentage > 0 ? '+' : ''}${percentage.toFixed(2)}%`;
-  };
+  const createInfoBars = (type, items) => items.map((item) => {
+    const {
+      number, // stock
+      name: itemName, // both
+      start_price: startPrice, // stock
+      now_price: nowPrice, // both
+      high_price: highPrice, // both
+      low_price: lowPrice, // both
+      price_increase: priceIncrease, // both
+      price_increase_rate: priceIncreaseRate, // crypto
+    } = item;
 
+    const isFav = type === 'Stock'
+      ? fav.stocks.filter((s) => s.number === number).length > 0
+      : fav.cryptos.filter((c) => c.name === itemName).length > 0;
+
+    const getTitleText = () => {
+      if (type === 'Stock') {
+        if (number === '0000') {
+          return `${itemName}  $${nowPrice}`;
+        } else {
+          return `[${number}]  ${itemName}  $${nowPrice}`;
+        }
+      } else {
+        return `${itemName}  $${nowPrice}`
+      }
+    };
+
+    const getIncreaseRate = () => {
+      const percentage = (parseFloat(priceIncrease) / parseFloat(startPrice)) * 100;
+      return `${percentage > 0 ? '+' : ''}${percentage.toFixed(2)}%`;
+    };
+
+    const LeftSwipeBtn = (reset) => ((
+      <Button
+        title={isFav ? '   移除最愛' : '   加入最愛'}
+        titleStyle={{
+          ...styles.leftSwipeBtnTitle,
+          color: isFav ? '#707070' : '#f72585',
+        }}
+        buttonStyle={styles.leftSwipeBtn}
+        icon={
+          <FontAwesome
+            size={18}
+            name={isFav ? 'trash' : 'bookmark'}
+            color={isFav ? '#707070' : '#f72585'}
+          />
+        }
+        onPress={() => {
+          isFav ? delFav(type, item) : addFav(type, item);
+          reset();
+        }}
+      />
+    ));
+
+    return (
+      <InfoBar
+        swipeable={number !== '0000' && name !== ''}
+        key={itemName}
+        titleText={getTitleText()}
+        subtitleText={
+          type === 'Stock'
+            ? `開${startPrice}  高${highPrice}  低${lowPrice}`
+            : `高${highPrice}  低${lowPrice}`
+        }
+        badgeText={
+          type === 'Stock'
+            ? getIncreaseRate()
+            : priceIncreaseRate
+        }
+        isBadgeRed={
+          type === 'Stock'
+            ? parseFloat(priceIncrease) > 0
+            : priceIncrease[0] === '+'
+        }
+        leftSwipeBtn={LeftSwipeBtn}
+        onPressFunc={() => navigation.navigate(type, { ...item })}
+      />
+    );
+  });
+
+  // Refresh favorite stocks and cryptos when user login
   useEffect(async () => {
     setLoading(true);
-    let tmp = await getFavStocks(name);
-    if (tmp) {
-      setFavStocks([...tmp]);
-    }
-    tmp = await getFavCryptos(name);
-    if (tmp) {
-      setFavCryptos([...tmp]);
+    if (name !== '') {
+      await refreshFav('both');
     }
     setLoading(false);
   }, [name]);
 
+  // Refresh recommended stocks and cryptos when mounted
   useEffect(async () => {
     setLoading(true);
-    let tmp = await getRcmdStocks();
-    if (tmp) {
-      setRcmdStocks([...tmp]);
-    }
-    tmp = await getRcmdCryptos();
-    if (tmp) {
-      setRcmdCryptos([...tmp]);
-    }
+    await refreshRcmd('both');
     setLoading(false);
   }, []);
-
-  const createFavStockBars = favStocks.map((stock) => (
-    <View style={styles.listItem} key={stock.number}>
-      <ListItem
-        containerStyle={{ borderRadius: 5 }}
-        onPress={() => onPressStock(stock)}
-        underlayColor="#ddd"
-        // leftContent={
-        //   <Button
-        //     title='移除最愛'
-        //     icon={{ name: 'delete', color: '#ef233c' }}
-        //     titleStyle={{ color: '#ef233c', fontSize: 14 }}
-        //     buttonStyle={{ minHeight: '100%', backgroundColor: '#fff', borderRightColor: '#ddd', borderRightWidth: 1, borderRadius: 0 }}
-        //     onPress={() => {
-        //       Alert.alert(
-        //         '警告',
-        //         `是否將 [${stock.number} ${stock.name}] 從最愛移除?`, [{
-        //             text: 'Cancel',
-        //             onPress: () => console.log('Cancel Pressed'),
-        //             style: 'cancel'
-        //           }, {
-        //             text: 'OK',
-        //             onPress: () => console.log('OK Pressed')
-        //           }]
-        //       );
-        //     }}
-        //   />
-        // }
-      >
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>
-            {stock.number === '0000' ? (
-              `${stock.name}  $${stock.now_price}`
-            ) : (
-              `[${stock.number}]  ${stock.name}  $${stock.now_price}`
-            )}
-          </ListItem.Title>
-          <ListItem.Subtitle style={styles.subtitle}>
-            {`開${stock.start_price}  高${stock.high_price}  低${stock.low_price}`}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-        <Badge
-          value={getPercentageText(stock.price_increase, stock.now_price)}
-          status={stock.price_increase > 0 ? 'error' : 'success'}
-        />
-        <ListItem.Chevron color="#707070" />
-      </ListItem>
-    </View>
-  ));
-
-  const createFavCryptoBars = favCryptos.map((crypto) => (
-    <View style={{ ...styles.listItem, height: 'auto' }} key={crypto.name}>
-      <ListItem
-        containerStyle={{ borderRadius: 5 }}
-        onPress={() => onPressCrypto(crypto)}
-        underlayColor="#ddd"
-      >
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>{`${crypto.name}  $${crypto.now_price}`}</ListItem.Title>
-          <ListItem.Subtitle style={styles.subtitle}>
-            {`高${crypto.high_price}  低${crypto.low_price}`}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-        <Badge value={crypto.price_increase_rate} status={crypto.price_increase[0] === '+' ? 'error' : 'success'} />
-        <ListItem.Chevron color="#707070" />
-      </ListItem>
-    </View>
-  ));
-
-  const createRcmdStockBars = rcmdStocks.map((stock) => (
-    <View style={styles.listItem} key={stock.number}>
-      <ListItem
-        containerStyle={{ borderRadius: 5 }}
-        onPress={() => onPressStock(stock)}
-        underlayColor="#ddd"
-      >
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>
-            {`[${stock.number}]  ${stock.name}  $${stock.now_price}`}
-          </ListItem.Title>
-          <ListItem.Subtitle style={styles.subtitle}>
-            {`開${stock.start_price}  高${stock.high_price}  低${stock.low_price}`}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-        <Badge
-          value={getPercentageText(stock.price_increase, stock.now_price)}
-          status={stock.price_increase > 0 ? 'error' : 'success'}
-        />
-        <ListItem.Chevron color="#707070" />
-      </ListItem>
-    </View>
-  ));
-
-  const createRcmdCryptoBars = rcmdCryptos.map((crypto) => (
-    <View style={{ ...styles.listItem, height: 'auto' }} key={crypto.name}>
-      <ListItem
-        containerStyle={{ borderRadius: 5 }}
-        onPress={() => onPressCrypto(crypto)}
-        underlayColor="#ddd"
-      >
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>{`${crypto.name}  $${crypto.now_price}`}</ListItem.Title>
-          <ListItem.Subtitle style={styles.subtitle}>
-            {`高${crypto.high_price}  低${crypto.low_price}`}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-        <Badge value={crypto.price_increase_rate} status={crypto.price_increase[0] === '+' ? 'error' : 'success'} />
-        <ListItem.Chevron color="#707070" />
-      </ListItem>
-    </View>
-  ));
 
   return (
     <ScrollView
@@ -228,7 +185,7 @@ const HomeScreen = ({ navigation }) => {
           <ActivityIndicator size="large" />
         </View>
       ) : (
-        <View style={styles.listItemsContainer}>
+        <View style={styles.contentContainer}>
           <ButtonGroup
             buttons={['台灣股市', '虛擬貨幣']}
             selectedIndex={selectedIndex}
@@ -253,17 +210,17 @@ const HomeScreen = ({ navigation }) => {
               <Text style={{ color: '#707070' }}>- 尚未登入 -</Text>
             </View>
           ) : (
-            selectedIndex === 0 ?
-            createFavStockBars :
-            createFavCryptoBars
+            selectedIndex === 0
+              ? createInfoBars('Stock', fav.stocks)
+              : createInfoBars('Crypto', fav.cryptos)
           )}
-          {name !== '' && selectedIndex === 1 && favCryptos.length === 0 && (
+          {name !== '' && selectedIndex === 1 && fav.cryptos.length === 0 && (
             <View style={styles.hint}>
               <Text style={{ color: '#707070' }}>- 尚無最愛幣種 -</Text>
             </View>
           )}
           <Text style={{ marginBottom: 15 }}>[ 推薦{`${selectedIndex === 0 ? '台股' : '幣種'}`} ]</Text>
-          {selectedIndex === 0 ? createRcmdStockBars : createRcmdCryptoBars}
+          {selectedIndex === 0 ? createInfoBars('Stock', rcmdStocks) : createInfoBars('Crypto', rcmdCryptos)}
         </View>
       )}
     </ScrollView >
@@ -277,24 +234,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  listItemsContainer: {
+  contentContainer: {
     width: '100%',
     padding: 20,
   },
-  listItem: {
-    height: 72,
-    borderRadius: 5,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#ddd',
+  leftSwipeBtn: {
+    minHeight: '100%',
+    backgroundColor: '#fff',
+    borderRightColor: '#ddd',
+    borderRightWidth: 1,
+    borderRadius: 0
   },
-  title: {
-    fontSize: 18,
-    marginBottom: 5,
-  },
-  subtitle: {
-    fontSize: 12,
-    color: '#666',
+  leftSwipeBtnTitle: {
+    fontSize: 14
   },
   btnGrpContainer: {
     width: '100%',

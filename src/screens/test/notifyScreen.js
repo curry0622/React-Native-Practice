@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, SafeAreaView, Platform, View } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button } from '@rneui/themed';
 import { FontAwesome } from '@expo/vector-icons';
 
 Notifications.setNotificationHandler({
