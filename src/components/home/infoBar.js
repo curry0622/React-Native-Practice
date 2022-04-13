@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ListItem, Badge } from 'react-native-elements';
+import { ListItem, Badge } from '@rneui/themed';
 
 const InfoBar = ({
   titleText,
@@ -15,7 +15,7 @@ const InfoBar = ({
       containerStyle={styles.listItemContainer}
       onPress={onPressFunc}
       underlayColor="#ddd"
-      leftContent={leftSwipeBtn}
+      leftContent={(reset) => leftSwipeBtn(reset)}
     >
       <ListItem.Content>
         <ListItem.Title style={styles.title}>

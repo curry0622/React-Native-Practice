@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator, Alert } from 'react-native';
-import { ListItem, Badge, ButtonGroup, Input, Button } from 'react-native-elements';
+import { ListItem, Badge, ButtonGroup, Input, Button } from '@rneui/themed';
 import { InfoBar } from '../../components/home';
 import UserContext from '../../contexts/userContext';
 import { getRcmdStocks, getRcmdCryptos } from '../../apis/user';
@@ -105,17 +105,27 @@ const HomeScreen = ({ navigation }) => {
       return `${percentage > 0 ? '+' : ''}${percentage.toFixed(2)}%`;
     };
 
-    const LeftSwipeBtn = () => {
-      return (
-        <Button
-          title={isFav ? '   移除最愛' : '   加入最愛'}
-          icon={<FontAwesome name={isFav ? 'trash' : 'bookmark'} size={18} color="#f72585" />}
-          titleStyle={{ color: '#f72585', fontSize: 14 }}
-          buttonStyle={{ minHeight: '100%', backgroundColor: '#fff', borderRightColor: '#ddd', borderRightWidth: 1, borderRadius: 0 }}
-          onPress={() => isFav ? delFav(type, item) : addFav(type, item)}
-        />
-      );
-    };
+    const LeftSwipeBtn = (reset) => ((
+      <Button
+        title={isFav ? '   移除最愛' : '   加入最愛'}
+        titleStyle={{
+          color: isFav ? '#707070' : '#f72585',
+          fontSize: 14
+        }}
+        buttonStyle={{ minHeight: '100%', backgroundColor: '#fff', borderRightColor: '#ddd', borderRightWidth: 1, borderRadius: 0 }}
+        icon={
+          <FontAwesome
+            size={18}
+            name={isFav ? 'trash' : 'bookmark'}
+            color={isFav ? '#707070' : '#f72585'}
+          />
+        }
+        onPress={() => {
+          isFav ? delFav(type, item) : addFav(type, item);
+          reset();
+        }}
+      />
+    ));
 
     return (
       <InfoBar
@@ -136,7 +146,7 @@ const HomeScreen = ({ navigation }) => {
             ? parseFloat(priceIncrease) > 0
             : priceIncrease[0] === '+'
         }
-        leftSwipeBtn={<LeftSwipeBtn />}
+        leftSwipeBtn={LeftSwipeBtn}
         onPressFunc={() => navigation.navigate(type, { ...item })}
       />
     );
