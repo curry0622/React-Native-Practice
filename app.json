@@ -1,15 +1,16 @@
 {
   "expo": {
-    "name": "payment-app-practice",
-    "slug": "payment-app-practice",
+    "name": "Stock $ Crypto",
+    "slug": "intelligent-assistant-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/app_logo.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
+    "privacy": "public",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -21,13 +22,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/app_logo.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/app_logo.png"
     },
-    "description": ""
+    "description": "股票及虛擬貨幣預測",
+    "githubUrl": "https://github.com/curry0622/React-Native-Practice"
   }
 }
