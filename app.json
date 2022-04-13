@@ -4,7 +4,7 @@
     "slug": "intelligent-assistant-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/app_logo.png",
+    "icon": "./assets/logo.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
@@ -22,12 +22,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/app_logo.png",
+        "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/app_logo.png"
+      "favicon": "./assets/logo.png"
     },
     "description": "股票及虛擬貨幣預測",
     "githubUrl": "https://github.com/curry0622/React-Native-Practice"
