@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator, Alert } from 'react-native';
-import { ListItem, Badge, ButtonGroup, Input, Button } from '@rneui/themed';
+import { StyleSheet, View, ScrollView, RefreshControl, Text, ActivityIndicator } from 'react-native';
+import { ButtonGroup, Input, Button } from '@rneui/themed';
 import { InfoBar } from '../../components/home';
 import UserContext from '../../contexts/userContext';
 import { getRcmdStocks, getRcmdCryptos } from '../../apis/user';
@@ -20,7 +20,7 @@ const HomeScreen = ({ navigation }) => {
 
   // useLogger(rcmdStocks);
 
-    const refreshRcmd = async (type) => {
+  const refreshRcmd = async (type) => {
     if (type === 'Stock') {
       const tmp = await getRcmdStocks();
       if (tmp) {
@@ -109,10 +109,10 @@ const HomeScreen = ({ navigation }) => {
       <Button
         title={isFav ? '   移除最愛' : '   加入最愛'}
         titleStyle={{
+          ...styles.leftSwipeBtnTitle,
           color: isFav ? '#707070' : '#f72585',
-          fontSize: 14
         }}
-        buttonStyle={{ minHeight: '100%', backgroundColor: '#fff', borderRightColor: '#ddd', borderRightWidth: 1, borderRadius: 0 }}
+        buttonStyle={styles.leftSwipeBtn}
         icon={
           <FontAwesome
             size={18}
@@ -129,6 +129,7 @@ const HomeScreen = ({ navigation }) => {
 
     return (
       <InfoBar
+        is0000={number === '0000'}
         key={name}
         titleText={getTitleText()}
         subtitleText={
@@ -154,18 +155,18 @@ const HomeScreen = ({ navigation }) => {
 
   // Refresh favorite stocks and cryptos when user login
   useEffect(async () => {
-    // setLoading(true);
+    setLoading(true);
     if (name !== '') {
       await refreshFav('both');
     }
-    // setLoading(false);
+    setLoading(false);
   }, [name]);
 
   // Refresh recommended stocks and cryptos when mounted
   useEffect(async () => {
-    // setLoading(true);
+    setLoading(true);
     await refreshRcmd('both');
-    // setLoading(false);
+    setLoading(false);
   }, []);
 
   return (
@@ -184,7 +185,7 @@ const HomeScreen = ({ navigation }) => {
           <ActivityIndicator size="large" />
         </View>
       ) : (
-        <View style={styles.listItemsContainer}>
+        <View style={styles.contentContainer}>
           <ButtonGroup
             buttons={['台灣股市', '虛擬貨幣']}
             selectedIndex={selectedIndex}
@@ -233,24 +234,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  listItemsContainer: {
+  contentContainer: {
     width: '100%',
     padding: 20,
   },
-  listItem: {
-    height: 72,
-    borderRadius: 5,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#ddd',
+  leftSwipeBtn: {
+    minHeight: '100%',
+    backgroundColor: '#fff',
+    borderRightColor: '#ddd',
+    borderRightWidth: 1,
+    borderRadius: 0
   },
-  title: {
-    fontSize: 18,
-    marginBottom: 5,
-  },
-  subtitle: {
-    fontSize: 12,
-    color: '#666',
+  leftSwipeBtnTitle: {
+    fontSize: 14
   },
   btnGrpContainer: {
     width: '100%',

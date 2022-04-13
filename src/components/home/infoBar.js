@@ -3,20 +3,16 @@ import { StyleSheet, View } from 'react-native';
 import { ListItem, Badge } from '@rneui/themed';
 
 const InfoBar = ({
+  is0000,
   titleText,
   subtitleText,
   badgeText,
   isBadgeRed,
   leftSwipeBtn,
   onPressFunc
-}) => (
-  <View style={styles.container}>
-    <ListItem.Swipeable
-      containerStyle={styles.listItemContainer}
-      onPress={onPressFunc}
-      underlayColor="#ddd"
-      leftContent={(reset) => leftSwipeBtn(reset)}
-    >
+}) => {
+  const InfoBarContent = () => (
+    <>
       <ListItem.Content>
         <ListItem.Title style={styles.title}>
           {titleText}
@@ -29,10 +25,33 @@ const InfoBar = ({
         value={badgeText}
         status={isBadgeRed ? 'error' : 'success'}
       />
-      <ListItem.Chevron color="#707070" />
-    </ListItem.Swipeable>
-  </View>
-);
+      <ListItem.Chevron color="#707070" style={{ marginLeft: 10 }} />
+    </>
+  );
+
+  return (
+    <View style={styles.container}>
+      {is0000 ? (
+        <ListItem
+          containerStyle={styles.listItemContainer}
+          onPress={onPressFunc}
+          underlayColor="#ddd"
+        >
+          <InfoBarContent />
+        </ListItem>
+      ) : (
+        <ListItem.Swipeable
+          containerStyle={styles.listItemContainer}
+          onPress={onPressFunc}
+          underlayColor="#ddd"
+          leftContent={(reset) => leftSwipeBtn(reset)}
+        >
+          <InfoBarContent />
+        </ListItem.Swipeable>
+      )}
+    </View>
+  );
+};
 
 export default InfoBar;
 

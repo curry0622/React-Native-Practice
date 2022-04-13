@@ -51,6 +51,9 @@ const StockScreen = ({ route }) => {
   }, []);
 
   const onPressFav = () => {
+    if (stockInfo.number === '0000') {
+      return;
+    }
     if (isFav) {
       setIsFav(false);
       delFav('Stock', stockInfo);
