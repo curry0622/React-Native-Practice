@@ -10,7 +10,7 @@ import { getStockInfo } from '../../apis/stock';
 // import { useLogger } from '../../hooks';
 
 const HomeScreen = ({ navigation }) => {
-  const { name, fav, refreshFav } = useContext(UserContext);
+  const { name, fav, addFav, delFav, refreshFav } = useContext(UserContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [rcmdStocks, setRcmdStocks] = useState([]);
@@ -21,7 +21,7 @@ const HomeScreen = ({ navigation }) => {
   // useLogger(rcmdStocks);
 
     const refreshRcmd = async (type) => {
-    if (type === 'stock') {
+    if (type === 'Stock') {
       const tmp = await getRcmdStocks();
       if (tmp) {
         setRcmdStocks([...tmp]);
@@ -45,9 +45,9 @@ const HomeScreen = ({ navigation }) => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await refreshRcmd(selectedIndex === 0 ? 'stock' : 'crypto');
+    await refreshRcmd(selectedIndex === 0 ? 'Stock' : 'crypto');
     if (name !== '') {
-      await refreshFav(selectedIndex === 0 ? 'stock' : 'crypto');
+      await refreshFav(selectedIndex === 0 ? 'Stock' : 'crypto');
     }
     setRefreshing(false);
   }, [name, selectedIndex]);
@@ -84,6 +84,10 @@ const HomeScreen = ({ navigation }) => {
       price_increase_rate: priceIncreaseRate, // crypto
     } = item;
 
+    const isFav = type === 'Stock'
+      ? fav.stocks.filter((s) => s.number === number).length > 0
+      : fav.cryptos.filter((c) => c.name === name).length > 0;
+
     const getTitleText = () => {
       if (type === 'Stock') {
         if (number === '0000') {
@@ -99,6 +103,18 @@ const HomeScreen = ({ navigation }) => {
     const getIncreaseRate = () => {
       const percentage = (parseFloat(priceIncrease) / parseFloat(startPrice)) * 100;
       return `${percentage > 0 ? '+' : ''}${percentage.toFixed(2)}%`;
+    };
+
+    const LeftSwipeBtn = () => {
+      return (
+        <Button
+          title={isFav ? '   移除最愛' : '   加入最愛'}
+          icon={<FontAwesome name={isFav ? 'trash' : 'bookmark'} size={18} color="#f72585" />}
+          titleStyle={{ color: '#f72585', fontSize: 14 }}
+          buttonStyle={{ minHeight: '100%', backgroundColor: '#fff', borderRightColor: '#ddd', borderRightWidth: 1, borderRadius: 0 }}
+          onPress={() => isFav ? delFav(type, item) : addFav(type, item)}
+        />
+      );
     };
 
     return (
@@ -120,7 +136,7 @@ const HomeScreen = ({ navigation }) => {
             ? parseFloat(priceIncrease) > 0
             : priceIncrease[0] === '+'
         }
-        leftSwipeBtn={null}
+        leftSwipeBtn={<LeftSwipeBtn />}
         onPressFunc={() => navigation.navigate(type, { ...item })}
       />
     );

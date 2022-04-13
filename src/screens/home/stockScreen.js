@@ -53,10 +53,10 @@ const StockScreen = ({ route }) => {
   const onPressFav = () => {
     if (isFav) {
       setIsFav(false);
-      delFav('stock', stockInfo);
+      delFav('Stock', stockInfo);
     } else {
       setIsFav(true);
-      addFav('stock', stockInfo);
+      addFav('Stock', stockInfo);
     }
   };
 

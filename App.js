@@ -26,7 +26,7 @@ export default function App() {
   });
 
   const addFav = (type, item) => {
-    if (type === 'stock') {
+    if (type === 'Stock') {
       addFavStock({ name, stockNum: item.number });
       setFav({
         stocks: [...fav.stocks, item],
@@ -42,7 +42,7 @@ export default function App() {
   };
 
   const delFav = (type, item) => {
-    if (type === 'stock') {
+    if (type === 'Stock') {
       delFavStock({ name, stockNum: item.number });
       setFav({
         stocks: fav.stocks.filter((stock) => stock.number !== item.number),
@@ -58,7 +58,7 @@ export default function App() {
   };
 
   const refreshFav = async (type) => {
-    if (type === 'stock') {
+    if (type === 'Stock') {
       const stocks = await getFavStocks(name);
       if (stocks) {
         setFav({
