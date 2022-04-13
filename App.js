@@ -1,6 +1,8 @@
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeStack, SettingStack } from './src/routes/';
@@ -87,26 +89,29 @@ export default function App() {
   };
 
   return (
-    <UserContext.Provider value={{ name, setName, fav, addFav, delFav, refreshFav }}>
-      <NavigationContainer>
-        <Tab.Navigator tabBarOptions={{ showLabel: false }}>
-          <Tab.Screen
-            name="Home"
-            component={HomeStack}
-            options={{
-              tabBarIcon: ({ focused }) => <Foundation name="home" size={26} color={focused ? '#00bbf0' : '#707070'} />
-            }}
-          />
-          <Tab.Screen
-            name="Setting"
-            component={SettingStack}
-            options={{
-              tabBarIcon: ({ focused }) => <Ionicons name="person" size={24} color={focused ? '#00bbf0' : '#707070'} />
-            }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </UserContext.Provider>
+    <SafeAreaProvider>
+      <UserContext.Provider value={{ name, setName, fav, addFav, delFav, refreshFav }}>
+        <NavigationContainer>
+          <Tab.Navigator tabBarOptions={{ showLabel: false }}>
+            <Tab.Screen
+              name="Home"
+              component={HomeStack}
+              options={{
+                tabBarIcon: ({ focused }) => <Foundation name="home" size={26} color={focused ? '#00bbf0' : '#707070'} />
+              }}
+            />
+            <Tab.Screen
+              name="Setting"
+              component={SettingStack}
+              options={{
+                tabBarIcon: ({ focused }) => <Ionicons name="person" size={24} color={focused ? '#00bbf0' : '#707070'} />
+              }}
+            />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </UserContext.Provider>
+      <StatusBar style="dark" />
+    </SafeAreaProvider>
   );
 }
 

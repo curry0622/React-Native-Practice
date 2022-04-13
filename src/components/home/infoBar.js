@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { ListItem, Badge } from '@rneui/themed';
 
 const InfoBar = ({
-  is0000,
+  swipeable,
   titleText,
   subtitleText,
   badgeText,
@@ -31,15 +31,7 @@ const InfoBar = ({
 
   return (
     <View style={styles.container}>
-      {is0000 ? (
-        <ListItem
-          containerStyle={styles.listItemContainer}
-          onPress={onPressFunc}
-          underlayColor="#ddd"
-        >
-          <InfoBarContent />
-        </ListItem>
-      ) : (
+      {swipeable ? (
         <ListItem.Swipeable
           containerStyle={styles.listItemContainer}
           onPress={onPressFunc}
@@ -48,6 +40,14 @@ const InfoBar = ({
         >
           <InfoBarContent />
         </ListItem.Swipeable>
+      ) : (
+        <ListItem
+          containerStyle={styles.listItemContainer}
+          onPress={onPressFunc}
+          underlayColor="#ddd"
+        >
+          <InfoBarContent />
+        </ListItem>
       )}
     </View>
   );

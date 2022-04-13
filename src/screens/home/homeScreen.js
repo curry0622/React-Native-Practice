@@ -75,7 +75,7 @@ const HomeScreen = ({ navigation }) => {
   const createInfoBars = (type, items) => items.map((item) => {
     const {
       number, // stock
-      name, // both
+      name: itemName, // both
       start_price: startPrice, // stock
       now_price: nowPrice, // both
       high_price: highPrice, // both
@@ -86,17 +86,17 @@ const HomeScreen = ({ navigation }) => {
 
     const isFav = type === 'Stock'
       ? fav.stocks.filter((s) => s.number === number).length > 0
-      : fav.cryptos.filter((c) => c.name === name).length > 0;
+      : fav.cryptos.filter((c) => c.name === itemName).length > 0;
 
     const getTitleText = () => {
       if (type === 'Stock') {
         if (number === '0000') {
-          return `${name}  $${nowPrice}`;
+          return `${itemName}  $${nowPrice}`;
         } else {
-          return `[${number}]  ${name}  $${nowPrice}`;
+          return `[${number}]  ${itemName}  $${nowPrice}`;
         }
       } else {
-        return `${name}  $${nowPrice}`
+        return `${itemName}  $${nowPrice}`
       }
     };
 
@@ -129,8 +129,8 @@ const HomeScreen = ({ navigation }) => {
 
     return (
       <InfoBar
-        is0000={number === '0000'}
-        key={name}
+        swipeable={number !== '0000' && name !== ''}
+        key={itemName}
         titleText={getTitleText()}
         subtitleText={
           type === 'Stock'
