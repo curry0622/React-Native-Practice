@@ -1,19 +1,23 @@
-# Stock & Crypto App Frontend
+# Stock & Crypto Intelligent Assistant App Frontend
+
+## How to use this app
+
+1. First install `Expo Go` on your mobile.
+
+2. Visit
+<https://expo.dev/@curry0622/intelligent-assistant-app>
+and scan the qrcode in the site.
+
+3. Start your journey!
 
 ## Install expo
 
-    $ npm install --global expo-cli
+    npm install --global expo-cli
 
-## Install Dependencies
+## Install dependencies
 
-    $ npm install
+    npm install
 
-## Start Running App
+## Start running app
 
-    $ expo start
-
-## How to Contribute to This Repository
-
-    $ git checkout -b [YourName/whatWillYouDo]
-    $ git push --set-upstream origin [YourName/whatWillYouDo]
-    Play around and create a pull request!
+    expo start
