@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet, View, Text, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Button, Input } from '@rneui/themed';
 import UserContext from '../../contexts/userContext';

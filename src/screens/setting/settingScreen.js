@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Button } from '@rneui/themed';
 import UserContext from '../../contexts/userContext';
 import { SvgUri } from 'react-native-svg';
@@ -8,7 +8,7 @@ const SettingScreen = ({ navigation }) => {
   const { name } = useContext(UserContext);
 
   return (
-    <ScrollView style={styles.container} >
+    <View style={styles.container}>
       <View style={styles.listItemsContainer}>
         <View style={styles.avatarContainer}>
           <SvgUri
@@ -42,7 +42,7 @@ const SettingScreen = ({ navigation }) => {
           onPress={() => navigation.push('Signup')}
         />
       </View>
-    </ScrollView >
+    </View >
   )
 };
 
