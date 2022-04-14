@@ -2,7 +2,7 @@
 
 ## How to use this app
 
-1. First install `Expo Go` on your mobile.
+1. First install `Expo Go` on your mobile phone.
 
 2. Visit
 <https://expo.dev/@curry0622/intelligent-assistant-app>
